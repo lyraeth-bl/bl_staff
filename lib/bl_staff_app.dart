@@ -1,4 +1,5 @@
 import 'package:bl_staff/core/app_router/app_router.dart';
+import 'package:bl_staff/core/theme/theme.dart';
 import 'package:bl_staff/utils/shared/constant.dart';
 import 'package:flutter/material.dart';
 
@@ -7,6 +8,12 @@ class BlStaffApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(routerConfig: getIt<AppRouter>().goRouter);
+    return MaterialApp.router(
+      debugShowCheckedModeBanner: false,
+      routerConfig: getIt<AppRouter>().goRouter,
+      themeMode: ThemeMode.system,
+      theme: lightMode,
+      darkTheme: darkMode,
+    );
   }
 }

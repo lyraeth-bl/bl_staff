@@ -1,4 +1,6 @@
 import 'package:bl_staff/core/app_router/route_names.dart';
+import 'package:bl_staff/features/auth/presentation/screen/auth_screen.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 /// {@template app_router}
@@ -66,11 +68,22 @@ class AppRouter {
   AppRouter();
 
   late final GoRouter goRouter = GoRouter(
-    initialLocation: RouteNames.splash,
+    initialLocation: RouteNames.authLogin,
     routes: [
-      GoRoute(path: RouteNames.splash),
-      GoRoute(path: RouteNames.welcome),
-      GoRoute(path: RouteNames.authLogin),
+      GoRoute(
+        path: RouteNames.splash,
+        builder: (context, state) =>
+            Scaffold(body: Center(child: Text("Splash Screen"))),
+      ),
+      GoRoute(
+        path: RouteNames.welcome,
+        builder: (context, state) =>
+            Scaffold(body: Center(child: Text("Splash Screen"))),
+      ),
+      GoRoute(
+        path: RouteNames.authLogin,
+        builder: (context, state) => AuthScreen(),
+      ),
     ],
   );
 }

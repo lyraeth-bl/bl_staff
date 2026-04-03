@@ -3,7 +3,7 @@ import 'package:bl_staff/core/storage/prefs_storage/prefs_storage_di.dart';
 import 'package:bl_staff/core/storage/secure_storage/secure_storage_di.dart';
 
 Future<void> initStorageDI() async {
-  initHiveStorageDI();
+  await initHiveStorageDI();
   await initPrefsStorageDI();
   initSecureStorageDI();
 }

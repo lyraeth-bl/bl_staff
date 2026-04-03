@@ -1,5 +1,4 @@
-import 'package:bl_staff/features/auth/presentation/widgets/auth_action_buttons.dart';
-import 'package:bl_staff/features/auth/presentation/widgets/auth_text_field.dart';
+import 'package:bl_staff/bl_staff.dart';
 import 'package:flutter/material.dart';
 
 class AuthScreen extends StatelessWidget {

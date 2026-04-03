@@ -1,5 +1,4 @@
-import 'package:bl_staff/features/sessions/data/datasources/sessions_local_data_source.dart';
-import 'package:bl_staff/features/sessions/domain/repository/sessions_repository.dart';
+import 'package:bl_staff/bl_staff.dart';
 import 'package:fpdart/fpdart.dart';
 
 class SessionsRepositoryImpl implements SessionsRepository {

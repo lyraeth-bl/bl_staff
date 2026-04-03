@@ -1,7 +1,6 @@
 import 'dart:convert';
 
-import 'package:bl_staff/core/api/failure/failure.dart';
-import 'package:bl_staff/utils/shared/types/types.dart';
+import 'package:bl_staff/bl_staff.dart';
 import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
 

@@ -1,10 +1,4 @@
-import 'package:bl_staff/core/api/api_client/api_client_di.dart';
-import 'package:bl_staff/core/api/network/network_di.dart';
-import 'package:bl_staff/core/api/token_provider/token_provider.dart';
-import 'package:bl_staff/core/app_router/app_router_di.dart';
-import 'package:bl_staff/core/storage/storage_di.dart';
-import 'package:bl_staff/features/sessions/presentation/bloc/sessions_bloc/sessions_bloc.dart';
-import 'package:bl_staff/utils/shared/constant.dart';
+import 'package:bl_staff/bl_staff.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 Future<void> setupLocator() async {
@@ -28,4 +22,5 @@ Future<void> setupLocator() async {
     },
   );
   initApiClientDI();
+  initAuthDI();
 }

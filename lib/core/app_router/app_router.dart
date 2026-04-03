@@ -1,5 +1,4 @@
-import 'package:bl_staff/core/app_router/route_names.dart';
-import 'package:bl_staff/features/auth/presentation/screen/auth_screen.dart';
+import 'package:bl_staff/bl_staff.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 

@@ -23,4 +23,5 @@ Future<void> setupLocator() async {
   );
   initApiClientDI();
   initAuthDI();
+  initSessionsDI();
 }

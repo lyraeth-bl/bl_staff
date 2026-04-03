@@ -13,11 +13,12 @@ import 'package:go_router/go_router.dart';
 ///
 /// ## Route Map
 ///
-/// | Path           | Page          | Description                        |
-/// |----------------|---------------|------------------------------------|
-/// | `/`            | SplashPage    | Initial loading screen             |
-/// | `/welcome`     | WelcomePage   | Landing screen                     |
-/// | `/auth/login`  | LoginPage     | Login form                         |
+/// | Path           | Screen          | Description                        |
+/// |----------------|-----------------|------------------------------------|
+/// | `/`            | SplashScreen    | Initial loading screen             |
+/// | `/welcome`     | WelcomeScreen   | Landing screen                     |
+/// | `/auth/login`  | LoginScreen     | Login form                         |
+/// | `/home`        | HomeScreen      | Home screen                        |
 ///
 /// ---
 ///
@@ -57,17 +58,49 @@ import 'package:go_router/go_router.dart';
 /// ## Adding New Routes
 ///
 /// 1. Add the path constant to [RouteNames].
-/// 2. Create the corresponding page widget under its feature folder.
+/// 2. Create the corresponding screen widget under its feature folder.
 /// 3. Add a new [GoRoute] entry in the [goRouter] routes list below.
 /// 4. If the route requires authentication, ensure it is covered
 ///    by the redirect guard.
 /// {@endtemplate}
 class AppRouter {
+  final SessionsBloc sessionsBloc;
+
   /// {@macro app_router}
-  AppRouter();
+  AppRouter(this.sessionsBloc);
 
   late final GoRouter goRouter = GoRouter(
-    initialLocation: RouteNames.authLogin,
+    initialLocation: RouteNames.splash,
+
+    // Refresh router setiap kali sessions state berubah.
+    refreshListenable: GoRouterRefreshStream(sessionsBloc.stream),
+
+    redirect: (context, state) {
+      final sessionState = sessionsBloc.state;
+
+      final isLoggedIn = sessionState.maybeWhen(
+        authenticated: (_, _) => true,
+        orElse: () => false,
+      );
+
+      final isFirstTime = sessionState.maybeWhen(
+        firstTime: () => true,
+        orElse: () => false,
+      );
+
+      final isOnSplash = state.matchedLocation == RouteNames.splash;
+      final isOnWelcome = state.matchedLocation == RouteNames.welcome;
+      final isOnLogin = state.matchedLocation == RouteNames.authLogin;
+
+      if (isFirstTime && !isOnWelcome) return RouteNames.welcome;
+      if (!isLoggedIn && !isOnLogin && !isOnSplash && !isOnWelcome) {
+        return RouteNames.authLogin;
+      }
+      if (isLoggedIn && (isOnLogin || isOnWelcome)) return RouteNames.home;
+
+      return null;
+    },
+
     routes: [
       GoRoute(
         path: RouteNames.splash,
@@ -77,11 +110,16 @@ class AppRouter {
       GoRoute(
         path: RouteNames.welcome,
         builder: (context, state) =>
-            Scaffold(body: Center(child: Text("Splash Screen"))),
+            Scaffold(body: Center(child: Text("Welcome Screen"))),
       ),
       GoRoute(
         path: RouteNames.authLogin,
         builder: (context, state) => AuthScreen(),
+      ),
+      GoRoute(
+        path: RouteNames.home,
+        builder: (context, state) =>
+            Scaffold(body: Center(child: Text("Home Screen"))),
       ),
     ],
   );

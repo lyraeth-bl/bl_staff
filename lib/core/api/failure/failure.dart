@@ -60,6 +60,17 @@ sealed class Failure with _$Failure {
     StackTrace? stackTrace,
   }) = UnexpectedFailure;
 
+  String get displayMessage => map(
+    network: (f) => f.message ?? 'Tidak dapat terhubung ke server.',
+    unauthorized: (f) =>
+        f.message ?? 'Sesi telah berakhir, silakan login kembali.',
+    forbidden: (f) => f.message ?? 'Anda tidak memiliki akses.',
+    validation: (f) => f.message ?? 'Data yang dikirim tidak valid.',
+    server: (f) => f.message ?? 'Terjadi kesalahan pada server.',
+    cancelled: (_) => 'Request dibatalkan.',
+    unexpected: (f) => f.message ?? 'Terjadi kesalahan yang tidak terduga.',
+  );
+
   static Failure fromDio(Object error, [StackTrace? stackTrace]) {
     if (error is DioException) {
       return switch (error.type) {

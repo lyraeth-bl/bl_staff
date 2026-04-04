@@ -1,4 +1,6 @@
 import 'package:bl_staff/bl_staff.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> initSessionsDI() async {
   getIt.registerLazySingleton<SessionsRepository>(
@@ -6,7 +8,10 @@ Future<void> initSessionsDI() async {
   );
 
   getIt.registerLazySingleton<SessionsLocalDataSource>(
-    () => SessionsLocalDataSourceImpl(),
+    () => SessionsLocalDataSourceImpl(
+      getIt<SharedPreferences>(),
+      getIt<FlutterSecureStorage>(),
+    ),
   );
 
   getIt.registerLazySingleton<GetAccessTokenUseCase>(

@@ -13,8 +13,10 @@ abstract class SessionsLocalDataSource {
 }
 
 class SessionsLocalDataSourceImpl implements SessionsLocalDataSource {
-  final SharedPreferences prefs = getIt<SharedPreferences>();
-  final FlutterSecureStorage secureStorage = getIt<FlutterSecureStorage>();
+  final SharedPreferences prefs;
+  final FlutterSecureStorage secureStorage;
+
+  SessionsLocalDataSourceImpl(this.prefs, this.secureStorage);
 
   @override
   Future<String?> getAccessToken() async =>

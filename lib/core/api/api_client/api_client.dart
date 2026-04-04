@@ -1,8 +1,10 @@
 import 'dart:convert';
 
-import 'package:bl_staff/bl_staff.dart';
 import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
+
+import '../../../utils/utils_export.dart';
+import '../failure/failure.dart';
 
 part 'api_constant.dart';
 

@@ -1,5 +1,6 @@
-import 'package:bl_staff/bl_staff.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+
+import '../../../../../utils/shared/models/sessions_token_model/sessions_token_model.dart';
 
 part 'login_response.freezed.dart';
 part 'login_response.g.dart';

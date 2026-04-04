@@ -1,4 +1,4 @@
-import 'package:bl_staff/bl_staff.dart';
+import '../repositories/sessions_repository.dart';
 
 class GetAccessTokenUseCase {
   final SessionsRepository _sessionsRepository;

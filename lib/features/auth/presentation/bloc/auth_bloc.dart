@@ -1,6 +1,11 @@
-import 'package:bl_staff/bl_staff.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+
+import '../../../../core/api/failure/failure.dart';
+import '../../../../utils/shared/entities/sessions_token_entity/sessions_token_entity.dart';
+import '../../domain/entities/login_params/login_params.dart';
+import '../../domain/usecases/login_use_case.dart';
+import '../../domain/usecases/logout_use_case.dart';
 
 part 'auth_bloc.freezed.dart';
 part 'auth_event.dart';

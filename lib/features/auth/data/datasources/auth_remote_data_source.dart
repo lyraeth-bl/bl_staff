@@ -1,5 +1,11 @@
-import 'package:bl_staff/bl_staff.dart';
 import 'package:fpdart/fpdart.dart';
+
+import '../../../../core/api/api_client/api_client.dart';
+import '../../../../core/api/failure/failure.dart';
+import '../../../../utils/shared/types/types.dart';
+import '../../../../utils/utils.dart';
+import '../models/login_request/login_request.dart';
+import '../models/login_response/login_response.dart';
 
 abstract class AuthRemoteDataSource {
   Future<Result<LoginResponse>> login(LoginRequest loginRequest);

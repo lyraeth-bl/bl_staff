@@ -1,6 +1,9 @@
-import 'package:bl_staff/bl_staff.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../features/features.dart';
+import 'go_router_refresh_stream.dart';
+import 'route_names.dart';
 
 /// {@template app_router}
 /// The central navigation controller for the application.
@@ -18,7 +21,7 @@ import 'package:go_router/go_router.dart';
 /// | `/`            | SplashScreen    | Initial loading screen             |
 /// | `/welcome`     | WelcomeScreen   | Landing screen                     |
 /// | `/auth/login`  | LoginScreen     | Login form                         |
-/// | `/home`        | HomeScreen      | Home screen                        |
+/// | `/dashboard`   | DashboardScreen | Dashboard screen                   |
 ///
 /// ---
 ///

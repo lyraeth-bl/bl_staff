@@ -1,6 +1,11 @@
-import 'package:bl_staff/bl_staff.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../sessions/sessions.dart';
+import '../../domain/entities/login_params/login_params.dart';
+import '../bloc/auth_bloc.dart';
+import '../widgets/auth_action_buttons.dart';
+import '../widgets/auth_text_field.dart';
 
 class AuthScreen extends StatelessWidget {
   const AuthScreen({super.key});

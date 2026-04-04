@@ -1,5 +1,6 @@
-import 'package:bl_staff/bl_staff.dart';
 import 'package:fpdart/fpdart.dart';
+
+import '../repositories/sessions_repository.dart';
 
 class SaveAccessTokenUseCase {
   final SessionsRepository _sessionsRepository;

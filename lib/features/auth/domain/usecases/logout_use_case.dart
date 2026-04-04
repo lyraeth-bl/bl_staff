@@ -1,5 +1,7 @@
-import 'package:bl_staff/bl_staff.dart';
 import 'package:fpdart/fpdart.dart';
+
+import '../../../../utils/shared/types/types.dart';
+import '../repositories/auth_repository.dart';
 
 class LogoutUseCase {
   final AuthRepository _authRepository;

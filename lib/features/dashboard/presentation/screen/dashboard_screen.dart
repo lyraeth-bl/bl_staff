@@ -1,6 +1,8 @@
-import 'package:bl_staff/bl_staff.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../auth/auth.dart';
+import '../../../sessions/sessions.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});

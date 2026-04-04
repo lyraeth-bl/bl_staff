@@ -1,6 +1,7 @@
-import 'package:bl_staff/bl_staff.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../../../core/core.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});

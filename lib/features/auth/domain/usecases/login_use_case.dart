@@ -1,4 +1,7 @@
-import 'package:bl_staff/bl_staff.dart';
+import '../../../../utils/shared/entities/sessions_token_entity/sessions_token_entity.dart';
+import '../../../../utils/shared/types/types.dart';
+import '../entities/login_params/login_params.dart';
+import '../repositories/auth_repository.dart';
 
 class LoginUseCase {
   final AuthRepository _authRepository;

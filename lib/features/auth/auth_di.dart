@@ -1,4 +1,11 @@
-import 'package:bl_staff/bl_staff.dart';
+import '../../core/api/api_client/api_client.dart';
+import '../../utils/shared/constant.dart';
+import 'data/datasources/auth_remote_data_source.dart';
+import 'data/repositories/auth_repository_impl.dart';
+import 'domain/repositories/auth_repository.dart';
+import 'domain/usecases/login_use_case.dart';
+import 'domain/usecases/logout_use_case.dart';
+import 'presentation/bloc/auth_bloc.dart';
 
 void initAuthDI() {
   getIt.registerLazySingleton<AuthRepository>(

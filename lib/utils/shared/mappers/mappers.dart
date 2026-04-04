@@ -1,5 +1,5 @@
-import 'package:bl_staff/utils/shared/entities/sessions_token_entity/sessions_token_entity.dart';
-import 'package:bl_staff/utils/shared/models/sessions_token_model/sessions_token_model.dart';
+import '../entities/sessions_token_entity/sessions_token_entity.dart';
+import '../models/sessions_token_model/sessions_token_model.dart';
 
 extension SessionsTokenModelMapper on SessionsTokenModel {
   SessionsTokenEntity toEntity() => SessionsTokenEntity(

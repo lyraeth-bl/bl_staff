@@ -1,4 +1,6 @@
-import 'package:bl_staff/bl_staff.dart';
+import '../../../utils/utils_export.dart';
+import '../../features/features.dart';
+import 'app_router.dart';
 
 void initAppRouterDI() {
   getIt.registerLazySingleton<AppRouter>(

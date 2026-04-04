@@ -1,7 +1,8 @@
-import 'package:bl_staff/core/api/network/dio_factory.dart';
-import 'package:bl_staff/utils/shared/constant.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+
+import '../../../utils/utils_export.dart';
+import 'dio_factory.dart';
 
 void initNetworkDI({
   required String baseUrl,

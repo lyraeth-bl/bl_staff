@@ -1,5 +1,9 @@
-import 'package:bl_staff/core/app_router/route_names.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../features/features.dart';
+import 'go_router_refresh_stream.dart';
+import 'route_names.dart';
 
 /// {@template app_router}
 /// The central navigation controller for the application.
@@ -12,11 +16,12 @@ import 'package:go_router/go_router.dart';
 ///
 /// ## Route Map
 ///
-/// | Path           | Page          | Description                        |
-/// |----------------|---------------|------------------------------------|
-/// | `/`            | SplashPage    | Initial loading screen             |
-/// | `/welcome`     | WelcomePage   | Landing screen                     |
-/// | `/auth/login`  | LoginPage     | Login form                         |
+/// | Path           | Screen          | Description                        |
+/// |----------------|-----------------|------------------------------------|
+/// | `/`            | SplashScreen    | Initial loading screen             |
+/// | `/welcome`     | WelcomeScreen   | Landing screen                     |
+/// | `/auth/login`  | LoginScreen     | Login form                         |
+/// | `/dashboard`   | DashboardScreen | Dashboard screen                   |
 ///
 /// ---
 ///
@@ -56,21 +61,74 @@ import 'package:go_router/go_router.dart';
 /// ## Adding New Routes
 ///
 /// 1. Add the path constant to [RouteNames].
-/// 2. Create the corresponding page widget under its feature folder.
+/// 2. Create the corresponding screen widget under its feature folder.
 /// 3. Add a new [GoRoute] entry in the [goRouter] routes list below.
 /// 4. If the route requires authentication, ensure it is covered
 ///    by the redirect guard.
 /// {@endtemplate}
 class AppRouter {
+  final SessionsBloc sessionsBloc;
+
   /// {@macro app_router}
-  AppRouter();
+  AppRouter(this.sessionsBloc);
 
   late final GoRouter goRouter = GoRouter(
     initialLocation: RouteNames.splash,
+
+    // Refresh router setiap kali sessions state berubah.
+    refreshListenable: GoRouterRefreshStream(sessionsBloc.stream),
+
+    redirect: (context, state) {
+      final sessionState = sessionsBloc.state;
+
+      final isReady = sessionState.maybeWhen(
+        authenticated: (_) => true,
+        unauthenticated: () => true,
+        orElse: () => false,
+      );
+
+      if (!isReady) return null;
+
+      final isLoggedIn = sessionState.maybeWhen(
+        authenticated: (_) => true,
+        orElse: () => false,
+      );
+
+      final isOnSplash = state.matchedLocation == RouteNames.splash;
+      final isOnWelcome = state.matchedLocation == RouteNames.welcome;
+      final isOnLogin = state.matchedLocation == RouteNames.authLogin;
+
+      // Biarkan splash handle navigasi awal
+      if (isOnSplash) return null;
+
+      // Belum login → paksa ke login
+      if (!isLoggedIn && !isOnLogin && !isOnWelcome) {
+        return RouteNames.authLogin;
+      }
+
+      // Sudah login tapi masih di login/welcome → ke dashboard
+      if (isLoggedIn && (isOnLogin || isOnWelcome)) return RouteNames.dashboard;
+
+      return null;
+    },
+
     routes: [
-      GoRoute(path: RouteNames.splash),
-      GoRoute(path: RouteNames.welcome),
-      GoRoute(path: RouteNames.authLogin),
+      GoRoute(
+        path: RouteNames.splash,
+        builder: (context, state) => const SplashScreen(),
+      ),
+      GoRoute(
+        path: RouteNames.welcome,
+        builder: (context, state) => const WelcomeScreen(),
+      ),
+      GoRoute(
+        path: RouteNames.authLogin,
+        builder: (context, state) => const AuthScreen(),
+      ),
+      GoRoute(
+        path: RouteNames.dashboard,
+        builder: (context, state) => const DashboardScreen(),
+      ),
     ],
   );
 }

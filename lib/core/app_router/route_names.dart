@@ -22,4 +22,7 @@ class RouteNames {
 
   // Auth Route
   static const String authLogin = "/auth/login";
+
+  // Dashboard
+  static const String dashboard = "/dashboard";
 }

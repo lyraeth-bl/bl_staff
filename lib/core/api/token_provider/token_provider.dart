@@ -1,6 +1,7 @@
-import 'package:bl_staff/features/sessions/data/datasources/sessions_local_data_source.dart';
-import 'package:bl_staff/utils/shared/constant.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
+import '../../../features/features.dart';
+import '../../../utils/utils_export.dart';
 
 part 'token_provider_di.dart';
 part 'token_provider_impl.dart';

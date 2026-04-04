@@ -11,7 +11,6 @@ part of 'sessions_bloc.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
-
 /// @nodoc
 mixin _$SessionsEvent implements DiagnosticableTreeMixin {
 
@@ -181,7 +180,6 @@ TResult map<TResult extends Object?>(
       throw StateError('Unexpected subclass');
   }
 }
-
 /// A variant of `map` that fallback to returning `null`.
 ///
 /// It is equivalent to doing:
@@ -209,7 +207,6 @@ TResult? mapOrNull<TResult extends Object?>(
       return null;
   }
 }
-
 /// A variant of `when` that fallback to an `orElse` callback.
 ///
 /// It is equivalent to doing:
@@ -491,13 +488,12 @@ extension SessionsStatePatterns on SessionsState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Initial value)? initial,TResult Function( _Loading value)? loading,TResult Function( _FirstTime value)? firstTime,TResult Function( _Authenticated value)? authenticated,TResult Function( _Unauthenticated value)? unauthenticated,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Initial value)? initial,TResult Function( _Loading value)? loading,TResult Function( _Authenticated value)? authenticated,TResult Function( _Unauthenticated value)? unauthenticated,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial(_that);case _Loading() when loading != null:
-return loading(_that);case _FirstTime() when firstTime != null:
-return firstTime(_that);case _Authenticated() when authenticated != null:
+return loading(_that);case _Authenticated() when authenticated != null:
 return authenticated(_that);case _Unauthenticated() when unauthenticated != null:
 return unauthenticated(_that);case _:
 return orElse();
@@ -517,13 +513,12 @@ return orElse();
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Initial value) initial,required TResult Function( _Loading value) loading,required TResult Function( _FirstTime value) firstTime,required TResult Function( _Authenticated value) authenticated,required TResult Function( _Unauthenticated value) unauthenticated,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Initial value) initial,required TResult Function( _Loading value) loading,required TResult Function( _Authenticated value) authenticated,required TResult Function( _Unauthenticated value) unauthenticated,}){
 final _that = this;
 switch (_that) {
 case _Initial():
 return initial(_that);case _Loading():
-return loading(_that);case _FirstTime():
-return firstTime(_that);case _Authenticated():
+return loading(_that);case _Authenticated():
 return authenticated(_that);case _Unauthenticated():
 return unauthenticated(_that);case _:
 throw StateError('Unexpected subclass');
@@ -542,13 +537,12 @@ throw StateError('Unexpected subclass');
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Initial value)? initial,TResult? Function( _Loading value)? loading,TResult? Function( _FirstTime value)? firstTime,TResult? Function( _Authenticated value)? authenticated,TResult? Function( _Unauthenticated value)? unauthenticated,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Initial value)? initial,TResult? Function( _Loading value)? loading,TResult? Function( _Authenticated value)? authenticated,TResult? Function( _Unauthenticated value)? unauthenticated,}){
 final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial(_that);case _Loading() when loading != null:
-return loading(_that);case _FirstTime() when firstTime != null:
-return firstTime(_that);case _Authenticated() when authenticated != null:
+return loading(_that);case _Authenticated() when authenticated != null:
 return authenticated(_that);case _Unauthenticated() when unauthenticated != null:
 return unauthenticated(_that);case _:
 return null;
@@ -567,13 +561,12 @@ return null;
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()? initial,TResult Function()? loading,TResult Function()? firstTime,TResult Function( String accessToken, bool isRefreshing)? authenticated,TResult Function()? unauthenticated,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()? initial,TResult Function()? loading,TResult Function( String accessToken)? authenticated,TResult Function()? unauthenticated,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case _Loading() when loading != null:
-return loading();case _FirstTime() when firstTime != null:
-return firstTime();case _Authenticated() when authenticated != null:
-return authenticated(_that.accessToken,_that.isRefreshing);case _Unauthenticated() when unauthenticated != null:
+return loading();case _Authenticated() when authenticated != null:
+return authenticated(_that.accessToken);case _Unauthenticated() when unauthenticated != null:
 return unauthenticated();case _:
 return orElse();
 
@@ -592,13 +585,12 @@ return orElse();
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function() initial,required TResult Function() loading,required TResult Function() firstTime,required TResult Function( String accessToken, bool isRefreshing) authenticated,required TResult Function() unauthenticated,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function() initial,required TResult Function() loading,required TResult Function( String accessToken) authenticated,required TResult Function() unauthenticated,}) {final _that = this;
 switch (_that) {
 case _Initial():
 return initial();case _Loading():
-return loading();case _FirstTime():
-return firstTime();case _Authenticated():
-return authenticated(_that.accessToken,_that.isRefreshing);case _Unauthenticated():
+return loading();case _Authenticated():
+return authenticated(_that.accessToken);case _Unauthenticated():
 return unauthenticated();case _:
 throw StateError('Unexpected subclass');
 
@@ -616,13 +608,12 @@ throw StateError('Unexpected subclass');
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()? initial,TResult? Function()? loading,TResult? Function()? firstTime,TResult? Function( String accessToken, bool isRefreshing)? authenticated,TResult? Function()? unauthenticated,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()? initial,TResult? Function()? loading,TResult? Function( String accessToken)? authenticated,TResult? Function()? unauthenticated,}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case _Loading() when loading != null:
-return loading();case _FirstTime() when firstTime != null:
-return firstTime();case _Authenticated() when authenticated != null:
-return authenticated(_that.accessToken,_that.isRefreshing);case _Unauthenticated() when unauthenticated != null:
+return loading();case _Authenticated() when authenticated != null:
+return authenticated(_that.accessToken);case _Unauthenticated() when unauthenticated != null:
 return unauthenticated();case _:
 return null;
 
@@ -695,47 +686,16 @@ return 'SessionsState.loading()';
 }
 
 
-/// @nodoc
-
-
-class _FirstTime with DiagnosticableTreeMixin implements SessionsState {
-const _FirstTime();
-
-
-@override
-void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-properties
-..add(DiagnosticsProperty('type', 'SessionsState.firstTime'))
-;
-}
-
-@override
-bool operator ==(Object other) {
-return identical(this, other) || (other.runtimeType == runtimeType&&other is _FirstTime);
-}
-
-
-@override
-int get hashCode => runtimeType.hashCode;
-
-@override
-String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
-return 'SessionsState.firstTime()';
-}
-
-
-}
 
 
 /// @nodoc
 
 
 class _Authenticated with DiagnosticableTreeMixin implements SessionsState {
-const _Authenticated({required this.accessToken, this.isRefreshing = false});
+const _Authenticated({required this.accessToken});
 
 
 final String accessToken;
-@JsonKey() final bool isRefreshing;
 
 /// Create a copy of SessionsState
 /// with the given fields replaced by the non-null parameter values.
@@ -748,21 +708,21 @@ _$AuthenticatedCopyWith<_Authenticated> get copyWith => __$AuthenticatedCopyWith
 void debugFillProperties(DiagnosticPropertiesBuilder properties) {
 properties
 ..add(DiagnosticsProperty('type', 'SessionsState.authenticated'))
-..add(DiagnosticsProperty('accessToken', accessToken))..add(DiagnosticsProperty('isRefreshing', isRefreshing));
+..add(DiagnosticsProperty('accessToken', accessToken));
 }
 
 @override
 bool operator ==(Object other) {
-return identical(this, other) || (other.runtimeType == runtimeType&&other is _Authenticated&&(identical(other.accessToken, accessToken) || other.accessToken == accessToken)&&(identical(other.isRefreshing, isRefreshing) || other.isRefreshing == isRefreshing));
+return identical(this, other) || (other.runtimeType == runtimeType&&other is _Authenticated&&(identical(other.accessToken, accessToken) || other.accessToken == accessToken));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,accessToken,isRefreshing);
+int get hashCode => Object.hash(runtimeType,accessToken);
 
 @override
 String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
-return 'SessionsState.authenticated(accessToken: $accessToken, isRefreshing: $isRefreshing)';
+return 'SessionsState.authenticated(accessToken: $accessToken)';
 }
 
 
@@ -773,7 +733,7 @@ abstract mixin class _$AuthenticatedCopyWith<$Res> implements $SessionsStateCopy
 factory _$AuthenticatedCopyWith(_Authenticated value, $Res Function(_Authenticated) _then) = __$AuthenticatedCopyWithImpl;
 @useResult
 $Res call({
-String accessToken, bool isRefreshing
+String accessToken
 });
 
 
@@ -788,11 +748,10 @@ final $Res Function(_Authenticated) _then;
 
 /// Create a copy of SessionsState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? accessToken = null,Object? isRefreshing = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? accessToken = null,}) {
 return _then(_Authenticated(
 accessToken: null == accessToken ? _self.accessToken : accessToken // ignore: cast_nullable_to_non_nullable
-as String,isRefreshing: null == isRefreshing ? _self.isRefreshing : isRefreshing // ignore: cast_nullable_to_non_nullable
-as bool,
+as String,
 ));
 }
 

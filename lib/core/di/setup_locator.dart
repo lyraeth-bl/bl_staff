@@ -1,20 +1,25 @@
-import 'package:bl_staff/core/api/api_client/api_client_di.dart';
-import 'package:bl_staff/core/api/network/network_di.dart';
-import 'package:bl_staff/core/api/token_provider/token_provider.dart';
-import 'package:bl_staff/core/app_router/app_router_di.dart';
-import 'package:bl_staff/core/storage/storage_di.dart';
-import 'package:bl_staff/features/sessions/presentation/bloc/sessions_bloc/sessions_bloc.dart';
-import 'package:bl_staff/utils/shared/constant.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+import '../../features/auth/auth_di.dart';
+import '../../features/features.dart';
+import '../../features/sessions/sessions_di.dart';
+import '../../utils/utils_export.dart';
+import '../api/api_client/api_client_di.dart';
+import '../api/network/network_di.dart';
+import '../api/token_provider/token_provider.dart';
+import '../app/app_bloc_observer.dart';
+import '../app_router/app_router_di.dart';
+import '../storage/storage_di.dart';
+
+String _resolveBaseUrl() {
+  final base =
+      dotenv.env['BASE_URL'] ?? (throw Exception('BASE_URL not found'));
+  return '${base.replaceAll(RegExp(r'/+$'), '')}/api/v1';
+}
 
 Future<void> setupLocator() async {
   await dotenv.load(fileName: ".env");
-
-  String _resolveBaseUrl() {
-    final base =
-        dotenv.env['BASE_URL'] ?? (throw Exception('BASE_URL not found'));
-    return '${base.replaceAll(RegExp(r'/+$'), '')}/api/v1';
-  }
 
   initAppRouterDI();
   await initStorageDI();
@@ -28,4 +33,8 @@ Future<void> setupLocator() async {
     },
   );
   initApiClientDI();
+  initAuthDI();
+  initSessionsDI();
+
+  Bloc.observer = const AppBlocObserver();
 }

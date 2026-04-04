@@ -1,1 +1,1 @@
-const String kAccessTokenKey = "auth.kAccessToken";
+const String kAccessTokenKey = "auth-kAccessToken";

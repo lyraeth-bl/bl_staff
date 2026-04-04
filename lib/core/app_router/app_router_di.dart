@@ -1,6 +1,9 @@
-import 'package:bl_staff/core/app_router/app_router.dart';
-import 'package:bl_staff/utils/shared/constant.dart';
+import '../../../utils/utils_export.dart';
+import '../../features/features.dart';
+import 'app_router.dart';
 
 void initAppRouterDI() {
-  getIt.registerLazySingleton<AppRouter>(() => AppRouter());
+  getIt.registerLazySingleton<AppRouter>(
+    () => AppRouter(getIt<SessionsBloc>()),
+  );
 }

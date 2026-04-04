@@ -1,10 +1,14 @@
-import 'package:bl_staff/features/sessions/data/datasources/sessions_local_data_source.dart';
-import 'package:bl_staff/features/sessions/data/repository/sessions_repository_impl.dart';
-import 'package:bl_staff/features/sessions/domain/repository/sessions_repository.dart';
-import 'package:bl_staff/features/sessions/domain/usecase/get_access_token_use_case.dart';
-import 'package:bl_staff/features/sessions/domain/usecase/save_access_token_use_case.dart';
-import 'package:bl_staff/features/sessions/presentation/bloc/sessions_bloc/sessions_bloc.dart';
-import 'package:bl_staff/utils/shared/constant.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../utils/shared/constant.dart';
+import 'data/datasources/sessions_local_data_source.dart';
+import 'data/repositories/sessions_repository_impl.dart';
+import 'domain/repositories/sessions_repository.dart';
+import 'domain/usecases/clear_session_use_case.dart';
+import 'domain/usecases/get_access_token_use_case.dart';
+import 'domain/usecases/save_access_token_use_case.dart';
+import 'presentation/bloc/sessions_bloc/sessions_bloc.dart';
 
 Future<void> initSessionsDI() async {
   getIt.registerLazySingleton<SessionsRepository>(
@@ -12,7 +16,10 @@ Future<void> initSessionsDI() async {
   );
 
   getIt.registerLazySingleton<SessionsLocalDataSource>(
-    () => SessionsLocalDataSourceImpl(),
+    () => SessionsLocalDataSourceImpl(
+      getIt<SharedPreferences>(),
+      getIt<FlutterSecureStorage>(),
+    ),
   );
 
   getIt.registerLazySingleton<GetAccessTokenUseCase>(
@@ -21,11 +28,15 @@ Future<void> initSessionsDI() async {
   getIt.registerLazySingleton<SaveAccessTokenUseCase>(
     () => SaveAccessTokenUseCase(getIt<SessionsRepository>()),
   );
+  getIt.registerLazySingleton<ClearSessionUseCase>(
+    () => ClearSessionUseCase(getIt<SessionsRepository>()),
+  );
 
   getIt.registerLazySingleton<SessionsBloc>(
     () => SessionsBloc(
       getIt<SaveAccessTokenUseCase>(),
       getIt<GetAccessTokenUseCase>(),
+      getIt<ClearSessionUseCase>(),
     ),
   );
 }

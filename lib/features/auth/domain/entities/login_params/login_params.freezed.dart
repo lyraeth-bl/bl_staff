@@ -11,7 +11,6 @@ part of 'login_params.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
-
 /// @nodoc
 mixin _$LoginParams {
 
@@ -19,7 +18,7 @@ mixin _$LoginParams {
 
   String get password;
 
-  String get deviceName;
+  String? get deviceName;
 
   /// Create a copy of LoginParams
   /// with the given fields replaced by the non-null parameter values.
@@ -59,12 +58,11 @@ abstract mixin class $LoginParamsCopyWith<$Res> {
 
   @useResult
   $Res call({
-    String email, String password, String deviceName
+    String email, String password, String? deviceName
   });
 
 
 }
-
 /// @nodoc
 class _$LoginParamsCopyWithImpl<$Res>
     implements $LoginParamsCopyWith<$Res> {
@@ -78,7 +76,7 @@ class _$LoginParamsCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call(
-      {Object? email = null, Object? password = null, Object? deviceName = null,}) {
+      {Object? email = null, Object? password = null, Object? deviceName = freezed,}) {
     return _then(_self.copyWith(
       email: null == email
           ? _self.email
@@ -88,10 +86,10 @@ class _$LoginParamsCopyWithImpl<$Res>
           ? _self.password
           : password // ignore: cast_nullable_to_non_nullable
       as String,
-      deviceName: null == deviceName
+      deviceName: freezed == deviceName
           ? _self.deviceName
           : deviceName // ignore: cast_nullable_to_non_nullable
-      as String,
+      as String?,
     ));
   }
 
@@ -190,7 +188,7 @@ extension LoginParamsPatterns on LoginParams {
   /// }
   /// ```
 
-  @optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String email, String password, String deviceName)? $default,{required TResult orElse(),}) {final _that = this;
+  @optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String email, String password, String? deviceName)? $default,{required TResult orElse(),}) {final _that = this;
   switch (_that) {
   case _LoginParams() when $default != null:
   return $default(_that.email,_that.password,_that.deviceName);case _:
@@ -211,7 +209,7 @@ extension LoginParamsPatterns on LoginParams {
   /// }
   /// ```
 
-  @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String email, String password, String deviceName) $default,) {final _that = this;
+  @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String email, String password, String? deviceName) $default,) {final _that = this;
   switch (_that) {
   case _LoginParams():
   return $default(_that.email,_that.password,_that.deviceName);case _:
@@ -231,7 +229,7 @@ extension LoginParamsPatterns on LoginParams {
   /// }
   /// ```
 
-  @optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String email, String password, String deviceName)? $default,) {final _that = this;
+  @optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String email, String password, String? deviceName)? $default,) {final _that = this;
   switch (_that) {
   case _LoginParams() when $default != null:
   return $default(_that.email,_that.password,_that.deviceName);case _:
@@ -247,12 +245,12 @@ extension LoginParamsPatterns on LoginParams {
 
 class _LoginParams implements LoginParams {
   const _LoginParams(
-      {required this.email, required this.password, required this.deviceName});
+      {required this.email, required this.password, this.deviceName});
 
 
   @override final String email;
   @override final String password;
-  @override final String deviceName;
+  @override final String? deviceName;
 
   /// Create a copy of LoginParams
   /// with the given fields replaced by the non-null parameter values.
@@ -295,12 +293,11 @@ abstract mixin class _$LoginParamsCopyWith<$Res>
   @override
   @useResult
   $Res call({
-    String email, String password, String deviceName
+    String email, String password, String? deviceName
   });
 
 
 }
-
 /// @nodoc
 class __$LoginParamsCopyWithImpl<$Res>
     implements _$LoginParamsCopyWith<$Res> {
@@ -314,7 +311,7 @@ class __$LoginParamsCopyWithImpl<$Res>
   @override
   @pragma('vm:prefer-inline')
   $Res call(
-      {Object? email = null, Object? password = null, Object? deviceName = null,}) {
+      {Object? email = null, Object? password = null, Object? deviceName = freezed,}) {
     return _then(_LoginParams(
       email: null == email
           ? _self.email
@@ -324,10 +321,10 @@ class __$LoginParamsCopyWithImpl<$Res>
           ? _self.password
           : password // ignore: cast_nullable_to_non_nullable
       as String,
-      deviceName: null == deviceName
+      deviceName: freezed == deviceName
           ? _self.deviceName
           : deviceName // ignore: cast_nullable_to_non_nullable
-      as String,
+      as String?,
     ));
   }
 

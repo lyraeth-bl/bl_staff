@@ -78,13 +78,16 @@ class AppRouter {
     redirect: (context, state) {
       final sessionState = sessionsBloc.state;
 
-      final isLoggedIn = sessionState.maybeWhen(
-        authenticated: (_, _) => true,
+      final isReady = sessionState.maybeWhen(
+        authenticated: (_) => true,
+        unauthenticated: () => true,
         orElse: () => false,
       );
 
-      final isFirstTime = sessionState.maybeWhen(
-        firstTime: () => true,
+      if (!isReady) return null;
+
+      final isLoggedIn = sessionState.maybeWhen(
+        authenticated: (_) => true,
         orElse: () => false,
       );
 
@@ -92,11 +95,16 @@ class AppRouter {
       final isOnWelcome = state.matchedLocation == RouteNames.welcome;
       final isOnLogin = state.matchedLocation == RouteNames.authLogin;
 
-      if (isFirstTime && !isOnWelcome) return RouteNames.welcome;
-      if (!isLoggedIn && !isOnLogin && !isOnSplash && !isOnWelcome) {
+      // Biarkan splash handle navigasi awal
+      if (isOnSplash) return null;
+
+      // Belum login → paksa ke login
+      if (!isLoggedIn && !isOnLogin && !isOnWelcome) {
         return RouteNames.authLogin;
       }
-      if (isLoggedIn && (isOnLogin || isOnWelcome)) return RouteNames.home;
+
+      // Sudah login tapi masih di login/welcome → ke dashboard
+      if (isLoggedIn && (isOnLogin || isOnWelcome)) return RouteNames.dashboard;
 
       return null;
     },
@@ -104,22 +112,19 @@ class AppRouter {
     routes: [
       GoRoute(
         path: RouteNames.splash,
-        builder: (context, state) =>
-            Scaffold(body: Center(child: Text("Splash Screen"))),
+        builder: (context, state) => const SplashScreen(),
       ),
       GoRoute(
         path: RouteNames.welcome,
-        builder: (context, state) =>
-            Scaffold(body: Center(child: Text("Welcome Screen"))),
+        builder: (context, state) => const WelcomeScreen(),
       ),
       GoRoute(
         path: RouteNames.authLogin,
-        builder: (context, state) => AuthScreen(),
+        builder: (context, state) => const AuthScreen(),
       ),
       GoRoute(
-        path: RouteNames.home,
-        builder: (context, state) =>
-            Scaffold(body: Center(child: Text("Home Screen"))),
+        path: RouteNames.dashboard,
+        builder: (context, state) => const DashboardScreen(),
       ),
     ],
   );

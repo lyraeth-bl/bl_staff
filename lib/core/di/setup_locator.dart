@@ -1,4 +1,5 @@
 import 'package:bl_staff/bl_staff.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 Future<void> setupLocator() async {
@@ -24,4 +25,6 @@ Future<void> setupLocator() async {
   initApiClientDI();
   initAuthDI();
   initSessionsDI();
+
+  Bloc.observer = const AppBlocObserver();
 }

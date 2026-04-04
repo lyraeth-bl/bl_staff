@@ -1,43 +1,44 @@
 import 'package:bl_staff/bl_staff.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AuthScreen extends StatelessWidget {
   const AuthScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(40, 80, 40, 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "Hey, \nLogin Now.",
-                style: TextStyle(
-                  fontSize: 48,
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.onSurface,
-                ),
-              ),
-              const SizedBox(height: 40),
-              _LoginForm(),
-              const SizedBox(height: 8),
-              _RememberMeRow(),
-              const SizedBox(height: 40),
-              AuthActionButtons(
-                actionWidget: Text(
-                  "Login",
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    color: Theme.of(context).colorScheme.onPrimary,
+    return BlocListener<AuthBloc, AuthState>(
+      listener: (context, state) {
+        state.whenOrNull(
+          successLogin: (accessToken, _) {
+            context.read<SessionsBloc>().add(
+              SessionsEvent.loggedIn(token: accessToken),
+            );
+          },
+        );
+      },
+      child: Scaffold(
+        body: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(40, 80, 40, 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Hey, \nLogin Now.",
+                  style: TextStyle(
+                    fontSize: 48,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
-              ),
-              const SizedBox(height: 32),
-              _TroubleLogInText(),
-            ],
+                const SizedBox(height: 40),
+                _LoginForm(),
+                const SizedBox(height: 32),
+                _TroubleLogInText(),
+              ],
+            ),
           ),
         ),
       ),
@@ -53,14 +54,25 @@ class _LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<_LoginForm> {
-  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   @override
   void dispose() {
-    _usernameController.dispose();
+    _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  void _loginStaff() {
+    context.read<AuthBloc>().add(
+      AuthEvent.loginRequested(
+        loginParams: LoginParams(
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim(),
+        ),
+      ),
+    );
   }
 
   @override
@@ -68,7 +80,7 @@ class _LoginFormState extends State<_LoginForm> {
     return Column(
       children: [
         AuthTextField(
-          textEditingController: _usernameController,
+          textEditingController: _emailController,
           hintText: "Username / Email",
         ),
         const SizedBox(height: 24),
@@ -76,6 +88,47 @@ class _LoginFormState extends State<_LoginForm> {
           textEditingController: _passwordController,
           hintText: "Password",
           obscureText: true,
+        ),
+        const SizedBox(height: 8),
+        _RememberMeRow(),
+        const SizedBox(height: 40),
+        BlocBuilder<AuthBloc, AuthState>(
+          builder: (context, state) {
+            final isLoading = state.maybeWhen(
+              loading: () => true,
+              orElse: () => false,
+            );
+
+            return isLoading
+                ? AuthActionButtons(
+                    buttonColor: isLoading
+                        ? Theme.of(context).colorScheme.primaryContainer
+                        : Theme.of(context).colorScheme.primary,
+                    actionWidget: SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                        backgroundColor: Theme.of(
+                          context,
+                        ).colorScheme.secondaryContainer,
+                      ),
+                    ),
+                  )
+                : AuthActionButtons(
+                    actionWidget: Text(
+                      "Login",
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ),
+                    ),
+                    actionOnTap: () {
+                      if (isLoading) return;
+
+                      _loginStaff();
+                    },
+                  );
+          },
         ),
       ],
     );

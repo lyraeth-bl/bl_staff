@@ -6,12 +6,8 @@ abstract class SessionsState with _$SessionsState {
 
   const factory SessionsState.loading() = _Loading;
 
-  const factory SessionsState.firstTime() = _FirstTime;
-
-  const factory SessionsState.authenticated({
-    required String accessToken,
-    @Default(false) bool isRefreshing,
-  }) = _Authenticated;
+  const factory SessionsState.authenticated({required String accessToken}) =
+      _Authenticated;
 
   const factory SessionsState.unauthenticated() = _Unauthenticated;
 }

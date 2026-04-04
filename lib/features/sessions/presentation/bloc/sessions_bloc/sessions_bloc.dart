@@ -10,9 +10,13 @@ part 'sessions_state.dart';
 class SessionsBloc extends Bloc<SessionsEvent, SessionsState> {
   final GetAccessTokenUseCase _getAccessTokenUseCase;
   final SaveAccessTokenUseCase _saveAccessTokenUseCase;
+  final ClearSessionUseCase _clearSessionUseCase;
 
-  SessionsBloc(this._saveAccessTokenUseCase, this._getAccessTokenUseCase)
-    : super(const SessionsState.initial()) {
+  SessionsBloc(
+    this._saveAccessTokenUseCase,
+    this._getAccessTokenUseCase,
+    this._clearSessionUseCase,
+  ) : super(const SessionsState.initial()) {
     on<_Started>(_onStarted);
     on<_LoggedIn>(_onLoggedIn);
     on<_LoggedOut>(_onLoggedOut);
@@ -31,12 +35,7 @@ class SessionsBloc extends Bloc<SessionsEvent, SessionsState> {
       return;
     }
 
-    emit(
-      SessionsState.authenticated(
-        accessToken: storedAccessToken,
-        isRefreshing: true,
-      ),
-    );
+    emit(SessionsState.authenticated(accessToken: storedAccessToken));
   }
 
   Future<void> _onLoggedIn(_LoggedIn event, Emitter<SessionsState> emit) async {
@@ -53,6 +52,8 @@ class SessionsBloc extends Bloc<SessionsEvent, SessionsState> {
     _LoggedOut event,
     Emitter<SessionsState> emit,
   ) async {
+    await _clearSessionUseCase.call();
+
     getIt<TokenProvider>().clearToken();
 
     emit(const SessionsState.unauthenticated());

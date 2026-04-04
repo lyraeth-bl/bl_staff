@@ -13,6 +13,7 @@ class AuthActionButtons extends StatelessWidget {
     this.secondActionPadding,
     required this.actionWidget,
     this.secondActionWidget,
+    this.buttonColor,
   });
 
   final void Function()? actionOnTap;
@@ -24,6 +25,7 @@ class AuthActionButtons extends StatelessWidget {
   final EdgeInsetsGeometry? secondActionPadding;
   final Widget actionWidget;
   final Widget? secondActionWidget;
+  final Color? buttonColor;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +41,7 @@ class AuthActionButtons extends StatelessWidget {
                   actionPadding ?? const EdgeInsets.symmetric(vertical: 16),
               decoration: BoxDecoration(
                 borderRadius: actionBorderRadius ?? BorderRadius.circular(16),
-                color: Theme.of(context).colorScheme.primary,
+                color: buttonColor ?? Theme.of(context).colorScheme.primary,
               ),
               child: Center(child: actionWidget),
             ),

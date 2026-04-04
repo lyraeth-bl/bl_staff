@@ -7,6 +7,6 @@ abstract class LoginParams with _$LoginParams {
   const factory LoginParams({
     required String email,
     required String password,
-    required String deviceName,
+    String? deviceName,
   }) = _LoginParams;
 }

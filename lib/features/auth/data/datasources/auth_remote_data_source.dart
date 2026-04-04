@@ -14,7 +14,13 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
   @override
   Future<Result<LoginResponse>> login(LoginRequest loginRequest) async {
-    final request = loginRequest.toJson();
+    final deviceName = await Utils.getDeviceName();
+
+    final request = LoginRequest(
+      email: loginRequest.email,
+      password: loginRequest.password,
+      deviceName: deviceName,
+    ).toJson();
 
     try {
       final response = await _apiClient.post(ApiPath.login, data: request);

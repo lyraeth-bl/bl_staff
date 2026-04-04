@@ -4,6 +4,7 @@ export 'api/failure/failure.dart';
 export 'api/network/dio_factory.dart';
 export 'api/network/network_di.dart';
 export 'api/token_provider/token_provider.dart';
+export 'app/app_bloc_observer.dart';
 export 'app/app_bloc_provider.dart';
 export 'app/bl_staff_app.dart';
 export 'app/initialize_app.dart';

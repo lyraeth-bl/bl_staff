@@ -4,4 +4,6 @@ abstract class SessionsRepository {
   Future<String?> getAccessToken();
 
   Future<Unit> saveAccessToken(String value);
+
+  Future<Unit> clearSession();
 }

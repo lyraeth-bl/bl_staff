@@ -8,6 +8,8 @@ abstract class SessionsLocalDataSource {
   Future<String?> getAccessToken();
 
   Future<Unit> saveAccessToken(String value);
+
+  Future<Unit> clearSession();
 }
 
 class SessionsLocalDataSourceImpl implements SessionsLocalDataSource {
@@ -26,6 +28,14 @@ class SessionsLocalDataSourceImpl implements SessionsLocalDataSource {
     } catch (e) {
       debugPrint("Failed to save accessToken");
     }
+
+    return unit;
+  }
+
+  @override
+  Future<Unit> clearSession() async {
+    await secureStorage.delete(key: kAccessTokenKey);
+    debugPrint("await secureStorage.delete(key: kAccessTokenKey) success");
 
     return unit;
   }

@@ -13,4 +13,7 @@ class SessionsRepositoryImpl implements SessionsRepository {
   @override
   Future<Unit> saveAccessToken(String value) =>
       _sessionsLocalDataSource.saveAccessToken(value);
+
+  @override
+  Future<Unit> clearSession() => _sessionsLocalDataSource.clearSession();
 }

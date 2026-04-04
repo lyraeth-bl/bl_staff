@@ -16,12 +16,14 @@ import 'route_names.dart';
 ///
 /// ## Route Map
 ///
-/// | Path           | Screen          | Description                        |
-/// |----------------|-----------------|------------------------------------|
-/// | `/`            | SplashScreen    | Initial loading screen             |
-/// | `/welcome`     | WelcomeScreen   | Landing screen                     |
-/// | `/auth/login`  | LoginScreen     | Login form                         |
-/// | `/dashboard`   | DashboardScreen | Dashboard screen                   |
+/// | Path           | Screen           | Description                        |
+/// |----------------|------------------|------------------------------------|
+/// | `/`            | SplashScreen     | Initial loading screen             |
+/// | `/welcome`     | WelcomeScreen    | Landing screen                     |
+/// | `/auth/login`  | LoginScreen      | Login form                         |
+/// | `/dashboard`   | DashboardScreen  | Dashboard screen                   |
+/// | `/attendance`  | AttendanceScreen | Attendance screen                  |
+/// | `/profile`     | ProfileScreen    | Profile screen                     |
 ///
 /// ---
 ///
@@ -125,9 +127,23 @@ class AppRouter {
         path: RouteNames.authLogin,
         builder: (context, state) => const AuthScreen(),
       ),
-      GoRoute(
-        path: RouteNames.dashboard,
-        builder: (context, state) => const DashboardScreen(),
+
+      ShellRoute(
+        builder: (context, state, child) => MainShell(child: child),
+        routes: [
+          GoRoute(
+            path: RouteNames.dashboard,
+            builder: (context, state) => const DashboardScreen(),
+          ),
+          GoRoute(
+            path: RouteNames.attendance,
+            builder: (context, state) => const AttendanceScreen(),
+          ),
+          GoRoute(
+            path: RouteNames.profile,
+            builder: (context, state) => const ProfileScreen(),
+          ),
+        ],
       ),
     ],
   );

@@ -1,5 +1,7 @@
+import 'package:bl_staff/core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:toastification/toastification.dart';
 
 import '../../../sessions/sessions.dart';
 import '../../domain/entities/login_params/login_params.dart';
@@ -62,6 +64,9 @@ class _LoginFormState extends State<_LoginForm> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  String? _emailError;
+  String? _passwordError;
+
   @override
   void dispose() {
     _emailController.dispose();
@@ -70,6 +75,11 @@ class _LoginFormState extends State<_LoginForm> {
   }
 
   void _loginStaff() {
+    setState(() {
+      _emailError = null;
+      _passwordError = null;
+    });
+
     context.read<AuthBloc>().add(
       AuthEvent.loginRequested(
         loginParams: LoginParams(
@@ -80,62 +90,100 @@ class _LoginFormState extends State<_LoginForm> {
     );
   }
 
+  void _handleFailure(Failure failure) {
+    failure.maybeMap(
+      validation: (f) {
+        setState(() {
+          _emailError = f.errors['email']?.firstOrNull;
+          _passwordError = f.errors['password']?.firstOrNull;
+        });
+      },
+      orElse: () {
+        toastification.show(
+          context: context,
+          autoCloseDuration: const Duration(seconds: 5),
+          type: ToastificationType.error,
+          style: ToastificationStyle.flat,
+          title: Text(failure.displayMessage),
+          alignment: Alignment.bottomCenter,
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        AuthTextField(
-          textEditingController: _emailController,
-          hintText: "Username / Email",
-        ),
-        const SizedBox(height: 24),
-        AuthTextField(
-          textEditingController: _passwordController,
-          hintText: "Password",
-          obscureText: true,
-        ),
-        const SizedBox(height: 8),
-        _RememberMeRow(),
-        const SizedBox(height: 40),
-        BlocBuilder<AuthBloc, AuthState>(
-          builder: (context, state) {
-            final isLoading = state.maybeWhen(
-              loading: () => true,
-              orElse: () => false,
-            );
+    return BlocListener<AuthBloc, AuthState>(
+      listener: (context, state) {
+        state.whenOrNull(failure: (failure) => _handleFailure(failure));
+      },
+      child: Column(
+        children: [
+          AuthTextField(
+            textEditingController: _emailController,
+            hintText: "Email",
+            errorText: _emailError,
+            onChanged: () {
+              debugPrint('onChanged called, clearing emailError');
+              setState(() => _emailError = null);
+            },
+          ),
+          const SizedBox(height: 24),
+          AuthTextField(
+            textEditingController: _passwordController,
+            hintText: "Password",
+            obscureText: true,
+            errorText: _passwordError,
+            onChanged: () {
+              debugPrint('onChanged called, clearing passwordError');
+              setState(() => _passwordError = null);
+            },
+          ),
+          const SizedBox(height: 8),
+          _RememberMeRow(),
+          const SizedBox(height: 40),
+          BlocBuilder<AuthBloc, AuthState>(
+            builder: (context, state) {
+              final isLoading = state.maybeWhen(
+                loading: () => true,
+                orElse: () => false,
+              );
 
-            return isLoading
-                ? AuthActionButtons(
-                    buttonColor: isLoading
-                        ? Theme.of(context).colorScheme.primaryContainer
-                        : Theme.of(context).colorScheme.primary,
-                    actionWidget: SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: CircularProgressIndicator(
-                        color: Theme.of(context).colorScheme.onPrimary,
-                        backgroundColor: Theme.of(
-                          context,
-                        ).colorScheme.secondaryContainer,
+              return isLoading
+                  ? AuthActionButtons(
+                      buttonColor: isLoading
+                          ? Theme.of(context).colorScheme.primaryContainer
+                          : Theme.of(context).colorScheme.primary,
+                      actionWidget: SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(
+                          color: Theme.of(context).colorScheme.onPrimary,
+                          backgroundColor: Theme.of(
+                            context,
+                          ).colorScheme.secondaryContainer,
+                        ),
                       ),
-                    ),
-                  )
-                : AuthActionButtons(
-                    actionWidget: Text(
-                      "Login",
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        color: Theme.of(context).colorScheme.onPrimary,
+                    )
+                  : AuthActionButtons(
+                      actionWidget: Text(
+                        "Login",
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          color: Theme.of(context).colorScheme.onPrimary,
+                        ),
                       ),
-                    ),
-                    actionOnTap: () {
-                      if (isLoading) return;
+                      actionOnTap: () {
+                        if (isLoading) return;
 
-                      _loginStaff();
-                    },
-                  );
-          },
-        ),
-      ],
+                        FocusScope.of(context).unfocus();
+
+                  _loginStaff();
+                },
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 }

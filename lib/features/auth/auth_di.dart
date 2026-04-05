@@ -7,6 +7,10 @@ import 'domain/usecases/login_use_case.dart';
 import 'domain/usecases/logout_use_case.dart';
 import 'presentation/bloc/auth_bloc.dart';
 
+/// Initializes the dependency injection for the authentication feature.
+///
+/// This function registers all the necessary repositories, data sources,
+/// use cases, and BLoCs with the [getIt] locator.
 void initAuthDI() {
   getIt.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(getIt<AuthRemoteDataSource>()),

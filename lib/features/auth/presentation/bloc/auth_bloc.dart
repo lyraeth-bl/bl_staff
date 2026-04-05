@@ -11,15 +11,25 @@ part 'auth_bloc.freezed.dart';
 part 'auth_event.dart';
 part 'auth_state.dart';
 
+/// A BLoC that manages the authentication state of the application.
+///
+/// This component coordinates the login and logout processes by interacting with
+/// the [LoginUseCase] and [LogoutUseCase]. It transitions between different
+/// [AuthState]s based on the [AuthEvent]s it receives.
+///
+/// See also:
+/// * [AuthEvent], for the events that can be dispatched to this BLoC.
+/// * [AuthState], for the various states this BLoC can emit.
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  final LoginUseCase _loginUseCase;
-  final LogoutUseCase _logoutUseCase;
-
+  /// Creates an [AuthBloc] with the required use cases.
   AuthBloc(this._loginUseCase, this._logoutUseCase)
     : super(const AuthState.initial()) {
     on<_LoginRequested>(_onLoginRequested);
     on<_LogoutRequested>(_onLogoutRequested);
   }
+
+  final LoginUseCase _loginUseCase;
+  final LogoutUseCase _logoutUseCase;
 
   Future<void> _onLoginRequested(
     _LoginRequested event,

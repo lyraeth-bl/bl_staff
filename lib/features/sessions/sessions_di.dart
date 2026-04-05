@@ -10,6 +10,12 @@ import 'domain/usecases/get_access_token_use_case.dart';
 import 'domain/usecases/save_access_token_use_case.dart';
 import 'presentation/bloc/sessions_bloc/sessions_bloc.dart';
 
+/// Registers all sessions feature dependencies into the service locator.
+///
+/// Must be called once during app initialization, before any sessions
+/// component is accessed. Registers [SessionsLocalDataSource],
+/// [SessionsRepository], all three session use cases, and [SessionsBloc]
+/// as lazy singletons.
 Future<void> initSessionsDI() async {
   getIt.registerLazySingleton<SessionsRepository>(
     () => SessionsRepositoryImpl(getIt<SessionsLocalDataSource>()),

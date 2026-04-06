@@ -1,4 +1,3 @@
-import 'package:bl_staff/features/auth/presentation/bloc/remember_me/remember_me_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -17,6 +16,7 @@ class AppBlocProvider extends StatelessWidget {
         BlocProvider<SessionsBloc>.value(value: getIt<SessionsBloc>()),
         BlocProvider<AuthBloc>.value(value: getIt<AuthBloc>()),
         BlocProvider<RememberMeCubit>.value(value: getIt<RememberMeCubit>()),
+        BlocProvider<UserBloc>.value(value: getIt<UserBloc>()),
       ],
       child: child,
     );

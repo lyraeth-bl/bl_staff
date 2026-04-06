@@ -4,6 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../../features/auth/auth_di.dart';
 import '../../features/features.dart';
 import '../../features/sessions/sessions_di.dart';
+import '../../features/user/user_di.dart';
 import '../../utils/utils_export.dart';
 import '../api/api_client/api_client_di.dart';
 import '../api/network/network_di.dart';
@@ -36,6 +37,7 @@ Future<void> setupLocator() async {
   initApiClientDI();
   initAuthDI();
   initSessionsDI();
+  initUserDI();
 
   Bloc.observer = const AppBlocObserver();
 }

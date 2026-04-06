@@ -8,4 +8,8 @@ abstract class AuthRepository {
   Future<Result<SessionsTokenEntity>> login(LoginParams loginParams);
 
   Future<Result<Unit>> logout();
+
+  Future<String?> getEmailFromRememberMe();
+
+  Future<Unit> saveEmailForRememberMe(String email);
 }

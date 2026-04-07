@@ -26,7 +26,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   final FetchMeUseCase _fetchMeUseCase;
 
   void _onStarted(_Started event, Emitter<UserState> emit) {
-    final savedUser = _getSavedUserDetailUseCase();
+    final savedUser = _getSavedUserDetailUseCase.call();
 
     if (savedUser != null) {
       emit(UserState.success(user: savedUser));
@@ -36,13 +36,19 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   }
 
   Future<void> _onFetchUser(_FetchUser event, Emitter<UserState> emit) async {
+    if (state is _Success && !event.forceRefresh) return;
+
     emit(const UserState.loading());
 
-    final result = await _fetchMeUseCase();
+    final result = await _fetchMeUseCase.call();
 
-    result.match((failure) => emit(UserState.failure(failure)), (user) async {
-      await _saveUserDetailUseCase(user);
-      emit(UserState.success(user: user));
-    });
+    if (result.isLeft()) {
+      emit(UserState.failure(result.getLeft().toNullable()!));
+      return;
+    }
+
+    final user = result.getRight().toNullable()!;
+    await _saveUserDetailUseCase.call(user);
+    emit(UserState.success(user: user));
   }
 }

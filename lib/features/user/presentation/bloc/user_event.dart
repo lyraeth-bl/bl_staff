@@ -4,5 +4,6 @@ part of 'user_bloc.dart';
 abstract class UserEvent with _$UserEvent {
   const factory UserEvent.started() = _Started;
 
-  const factory UserEvent.fetchUser() = _FetchUser;
+  const factory UserEvent.fetchUser({@Default(false) bool forceRefresh}) =
+      _FetchUser;
 }

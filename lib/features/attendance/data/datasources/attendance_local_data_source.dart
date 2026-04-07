@@ -36,11 +36,13 @@ class AttendanceLocalDataSourceImpl implements AttendanceLocalDataSource {
   }) {
     final rawData =
         _hive.box(attendanceBoxKey).get(_monthlyKey(month, year))
-            as List<Map<String, dynamic>>?;
+            as List<dynamic>?;
 
     if (rawData == null) return null;
 
-    return rawData.map((e) => AttendanceModel.fromJson(e)).toList();
+    return rawData
+        .map((e) => AttendanceModel.fromJson(Map<String, dynamic>.from(e)))
+        .toList();
   }
 
   @override
@@ -59,8 +61,7 @@ class AttendanceLocalDataSourceImpl implements AttendanceLocalDataSource {
     required List<AttendanceModel> listAttendanceModel,
   }) async {
     final jsonList =
-        listAttendanceModel.map((e) => e.toJson()).toList()
-            as List<Map<String, dynamic>>?;
+        listAttendanceModel.map((e) => e.toJson()).toList() as List<dynamic>?;
 
     await _hive.box(attendanceBoxKey).put(_monthlyKey(month, year), jsonList);
 

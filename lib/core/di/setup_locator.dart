@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+import '../../features/attendance/attendance_di.dart';
 import '../../features/auth/auth_di.dart';
 import '../../features/features.dart';
 import '../../features/sessions/sessions_di.dart';
@@ -38,6 +39,7 @@ Future<void> setupLocator() async {
   initAuthDI();
   initSessionsDI();
   initUserDI();
+  initAttendanceDI();
 
   Bloc.observer = const AppBlocObserver();
 }

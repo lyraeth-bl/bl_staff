@@ -7,6 +7,7 @@ Future<void> initHiveStorageDI() async {
   await Hive.initFlutter();
 
   await Hive.openBox(userBoxKey);
+  await Hive.openBox(attendanceBoxKey);
 
   getIt.registerLazySingleton<HiveInterface>(() => Hive);
 }

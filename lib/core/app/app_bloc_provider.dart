@@ -17,6 +17,10 @@ class AppBlocProvider extends StatelessWidget {
         BlocProvider<AuthBloc>.value(value: getIt<AuthBloc>()),
         BlocProvider<RememberMeCubit>.value(value: getIt<RememberMeCubit>()),
         BlocProvider<UserBloc>.value(value: getIt<UserBloc>()),
+        BlocProvider<AttendanceBloc>.value(value: getIt<AttendanceBloc>()),
+        BlocProvider<TodayAttendanceCubit>.value(
+          value: getIt<TodayAttendanceCubit>(),
+        ),
       ],
       child: child,
     );

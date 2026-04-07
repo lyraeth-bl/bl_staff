@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
+import '../../../attendance/domain/entities/attendance_entity/attendance_entity.dart';
 import '../../../attendance/presentation/widgets/attendance_weekly_bar_data.dart';
 import '../../../user/presentation/bloc/user_bloc.dart';
 
@@ -327,8 +328,6 @@ class _DashboardCheckInOutContainer extends StatelessWidget {
   }
 }
 
-enum AttendanceStatus { hadir, terlambat, absen }
-
 class _TodayStatusCard extends StatelessWidget {
   const _TodayStatusCard();
 
@@ -413,6 +412,36 @@ class _TodayStatusCard extends StatelessWidget {
       case AttendanceStatus.absen:
         return _StatusConfig(
           label: "Tidak Hadir",
+          icon: LucideIcons.circleX,
+          backgroundColor: Theme.of(context).colorScheme.errorContainer,
+          borderColor: Theme.of(
+            context,
+          ).colorScheme.error.withValues(alpha: 0.3),
+          iconBackgroundColor: Theme.of(
+            context,
+          ).colorScheme.error.withValues(alpha: 0.15),
+          iconColor: Theme.of(context).colorScheme.error,
+          titleColor: Theme.of(context).colorScheme.error,
+          subtitleColor: Theme.of(context).colorScheme.onErrorContainer,
+        );
+      case AttendanceStatus.lupaCheckin:
+        return _StatusConfig(
+          label: "Lupa Check in",
+          icon: LucideIcons.circleX,
+          backgroundColor: Theme.of(context).colorScheme.errorContainer,
+          borderColor: Theme.of(
+            context,
+          ).colorScheme.error.withValues(alpha: 0.3),
+          iconBackgroundColor: Theme.of(
+            context,
+          ).colorScheme.error.withValues(alpha: 0.15),
+          iconColor: Theme.of(context).colorScheme.error,
+          titleColor: Theme.of(context).colorScheme.error,
+          subtitleColor: Theme.of(context).colorScheme.onErrorContainer,
+        );
+      case AttendanceStatus.lupaCheckout:
+        return _StatusConfig(
+          label: "Lupa Check out",
           icon: LucideIcons.circleX,
           backgroundColor: Theme.of(context).colorScheme.errorContainer,
           borderColor: Theme.of(

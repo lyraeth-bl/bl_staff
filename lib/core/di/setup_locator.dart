@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+import '../../features/attendance/attendance_di.dart';
 import '../../features/auth/auth_di.dart';
 import '../../features/features.dart';
 import '../../features/sessions/sessions_di.dart';
@@ -15,8 +16,7 @@ import '../storage/storage_di.dart';
 
 String _resolveBaseUrl() {
   final base =
-      dotenv.env['BASE_URL_SERVER'] ??
-      (throw Exception('BASE_URL_SERVER not found'));
+      dotenv.env['BASE_URL'] ?? (throw Exception('BASE_URL not found'));
   return '${base.replaceAll(RegExp(r'/+$'), '')}/api/v1';
 }
 
@@ -38,6 +38,7 @@ Future<void> setupLocator() async {
   initAuthDI();
   initSessionsDI();
   initUserDI();
+  initAttendanceDI();
 
   Bloc.observer = const AppBlocObserver();
 }

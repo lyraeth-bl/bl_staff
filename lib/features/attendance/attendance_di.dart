@@ -27,10 +27,10 @@ void initAttendanceDI() {
   );
 
   getIt.registerLazySingleton<FetchMonthlyAttendanceUseCase>(
-    () => getIt<FetchMonthlyAttendanceUseCase>(),
+    () => FetchMonthlyAttendanceUseCase(getIt<AttendanceRepository>()),
   );
   getIt.registerLazySingleton<FetchTodayAttendanceUseCase>(
-    () => getIt<FetchTodayAttendanceUseCase>(),
+    () => FetchTodayAttendanceUseCase(getIt<AttendanceRepository>()),
   );
 
   getIt.registerFactory<AttendanceBloc>(

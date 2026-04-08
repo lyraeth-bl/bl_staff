@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../utils/utils_export.dart';
 import '../../domain/entities/attendance_entity/attendance_entity.dart';
 import '../bloc/attendance_bloc.dart';
 import 'attendance_weekly_bar_data.dart';
@@ -55,25 +56,7 @@ class _WeeklyActivityChartState extends State<WeeklyActivityChart> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 6,
-                ),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surface,
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    color: Theme.of(context).colorScheme.outlineVariant,
-                  ),
-                ),
-                child: Text(
-                  "Weekly",
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
-                ),
-              ),
+              ContainerChips(text: "Weekly"),
             ],
           ),
           const SizedBox(height: 12),
@@ -145,6 +128,7 @@ class _WeeklyActivityChartState extends State<WeeklyActivityChart> {
                 ),
                 barGroups: List.generate(widget.weeklyData.length, (i) {
                   final data = widget.weeklyData[i];
+                  final thisDay = DateTime.now().day;
                   return BarChartGroupData(
                     x: i,
                     barRods: [
@@ -152,13 +136,17 @@ class _WeeklyActivityChartState extends State<WeeklyActivityChart> {
                         toY: data.hoursWorked,
                         color: _barColor(context, data.status),
                         width: 20,
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(8),
                         backDrawRodData: BackgroundBarChartRodData(
                           show: true,
                           toY: 12,
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.surfaceContainerHighest,
+                          color: (data.date.day == thisDay)
+                              ? Theme.of(
+                                  context,
+                                ).colorScheme.surfaceContainerHigh
+                              : Theme.of(
+                                  context,
+                                ).colorScheme.surfaceContainerHighest,
                         ),
                       ),
                     ],

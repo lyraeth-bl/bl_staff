@@ -4,6 +4,7 @@ import 'package:bl_staff/utils/utils_export.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:toastification/toastification.dart';
 
 import '../../../attendance/attendance.dart';
 import '../../../user/presentation/bloc/user_bloc.dart';
@@ -130,6 +131,7 @@ class _DashboardAppBar extends StatelessWidget {
       surfaceTintColor: Colors.transparent,
       shadowColor: Colors.transparent,
       title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             "Welcome to Budi Luhur Staff",
@@ -138,21 +140,7 @@ class _DashboardAppBar extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 4),
-          BlocSelector<UserBloc, UserState, String>(
-            selector: (state) => state.maybeWhen(
-              success: (user) => user.name.isNotEmpty ? user.name : '?',
-              orElse: () => '?',
-            ),
-            builder: (context, userName) {
-              return Text(
-                userName,
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface,
-                  fontWeight: FontWeight.bold,
-                ),
-              );
-            },
-          ),
+          _UserNameOnAppBar(),
         ],
       ),
       actions: [
@@ -224,18 +212,25 @@ class _DashboardContent extends StatelessWidget {
                     success: (attendance) => attendance,
                   );
 
+                  final isLoading = state.maybeWhen(
+                    loading: () => true,
+                    orElse: () => false,
+                  );
+
                   return Row(
                     children: [
                       CheckinCheckoutContainer(
                         title: "Check in",
                         value: todayAttendance?.checkIn?.toHourMinuteFormat,
                         icon: LucideIcons.squareArrowRight,
+                        isLoading: isLoading,
                       ),
                       const SizedBox(width: 8),
                       CheckinCheckoutContainer(
                         title: "Check out",
                         value: todayAttendance?.checkOut?.toHourMinuteFormat,
                         icon: LucideIcons.squareArrowLeft,
+                        isLoading: isLoading,
                       ),
                     ],
                   );
@@ -245,7 +240,35 @@ class _DashboardContent extends StatelessWidget {
             const SizedBox(height: 8),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: TodayStatusCard(),
+              child: BlocBuilder<TodayAttendanceCubit, TodayAttendanceState>(
+                builder: (context, state) {
+                  return state.when(
+                    initial: () => const SizedBox.shrink(),
+                    loading: () => const TodayStatusCardShimmer(),
+
+                    success: (attendance) {
+                      final status = attendance?.status;
+
+                      if (status == null) return const SizedBox.shrink();
+
+                      return TodayStatusCard(status: status);
+                    },
+
+                    failure: (failure) {
+                      toastification.show(
+                        context: context,
+                        autoCloseDuration: const Duration(seconds: 3),
+                        type: ToastificationType.error,
+                        style: ToastificationStyle.flat,
+                        title: Text(failure.displayMessage),
+                        alignment: Alignment.bottomCenter,
+                      );
+
+                      return const SizedBox.shrink();
+                    },
+                  );
+                },
+              ),
             ),
             const SizedBox(height: 8),
             Padding(
@@ -266,6 +289,35 @@ class _DashboardContent extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _UserNameOnAppBar extends StatelessWidget {
+  const _UserNameOnAppBar();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<UserBloc, UserState>(
+      builder: (context, state) {
+        final bool isLoading = state.maybeWhen(
+          loading: () => true,
+          orElse: () => false,
+        );
+
+        final userName = state.maybeWhen(
+          success: (user) => user.name.isNotEmpty ? user.name : '-',
+          orElse: () => '-',
+        );
+
+        return Text(
+          userName,
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            color: Theme.of(context).colorScheme.onSurface,
+            fontWeight: FontWeight.bold,
+          ),
+        ).toShimmer(context, isLoading: isLoading, width: 160, height: 16);
+      },
     );
   }
 }

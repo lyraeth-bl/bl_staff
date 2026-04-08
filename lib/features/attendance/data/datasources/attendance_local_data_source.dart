@@ -29,6 +29,11 @@ class AttendanceLocalDataSourceImpl implements AttendanceLocalDataSource {
   String _monthlyKey(int month, int year) =>
       '${monthlyAttendanceKey}_${year}_$month';
 
+  String get _todayKey {
+    final now = DateTime.now();
+    return '${todayAttendanceKey}_${now.year}_${now.month.toString().padLeft(2, '0')}_${now.day.toString().padLeft(2, '0')}';
+  }
+
   @override
   List<AttendanceModel>? getSavedMonthlyAttendance({
     required int month,
@@ -47,7 +52,7 @@ class AttendanceLocalDataSourceImpl implements AttendanceLocalDataSource {
 
   @override
   AttendanceModel? getSavedTodayAttendance() {
-    final rawData = _hive.box(attendanceBoxKey).get(todayAttendanceKey) as Map?;
+    final rawData = _hive.box(attendanceBoxKey).get(_todayKey) as Map?;
 
     if (rawData == null) return null;
 
@@ -70,9 +75,7 @@ class AttendanceLocalDataSourceImpl implements AttendanceLocalDataSource {
 
   @override
   Future<Unit> saveTodayAttendance(AttendanceModel attendanceEntity) async {
-    await _hive
-            .box(attendanceBoxKey)
-            .put(todayAttendanceKey, attendanceEntity.toJson())
+    await _hive.box(attendanceBoxKey).put(_todayKey, attendanceEntity.toJson())
         as List<Map<String, dynamic>>?;
 
     return unit;

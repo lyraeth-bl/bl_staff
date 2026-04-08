@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../domain/entities/attendance_entity/attendance_entity.dart';
 
 class TodayStatusCard extends StatelessWidget {
-  const TodayStatusCard({super.key});
+  const TodayStatusCard({super.key, required this.status});
 
-  static const _status = AttendanceStatus.hadir;
+  final AttendanceStatus status;
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +53,7 @@ class TodayStatusCard extends StatelessWidget {
   }
 
   _StatusConfig _statusConfig(BuildContext context) {
-    switch (_status) {
+    switch (status) {
       case AttendanceStatus.hadir:
         return _StatusConfig(
           label: "Hadir",
@@ -152,4 +153,68 @@ class _StatusConfig {
   final Color iconColor;
   final Color titleColor;
   final Color subtitleColor;
+}
+
+class TodayStatusCardShimmer extends StatelessWidget {
+  const TodayStatusCardShimmer({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final baseColor = Theme.of(context).colorScheme.surfaceContainerHighest;
+    final highlightColor = Theme.of(context).colorScheme.surface;
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surfaceContainer,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
+      ),
+      child: Row(
+        children: [
+          Shimmer.fromColors(
+            baseColor: baseColor,
+            highlightColor: highlightColor,
+            child: CircleAvatar(radius: 20, backgroundColor: Colors.white),
+          ),
+
+          const SizedBox(width: 12),
+
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Shimmer.fromColors(
+                baseColor: baseColor,
+                highlightColor: highlightColor,
+                child: Container(
+                  width: 100,
+                  height: 12,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 6),
+
+              Shimmer.fromColors(
+                baseColor: baseColor,
+                highlightColor: highlightColor,
+                child: Container(
+                  width: 120,
+                  height: 16,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 }

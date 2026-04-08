@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../utils/shared/extension/extension.dart';
+
 class CheckinCheckoutContainer extends StatelessWidget {
   const CheckinCheckoutContainer({
     super.key,
@@ -15,6 +17,7 @@ class CheckinCheckoutContainer extends StatelessWidget {
     this.valueTextColor,
     this.circleAvatarBackgroundColor,
     this.circleAvatarForegroundColor,
+    this.isLoading = false,
   });
 
   final EdgeInsetsGeometry? padding;
@@ -29,6 +32,7 @@ class CheckinCheckoutContainer extends StatelessWidget {
   final Color? valueTextColor;
   final Color? circleAvatarBackgroundColor;
   final Color? circleAvatarForegroundColor;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +87,10 @@ class CheckinCheckoutContainer extends StatelessWidget {
                 ),
               ],
             ),
-            Text(valueText, style: valueTextStyleFormat),
+            Text(
+              valueText,
+              style: valueTextStyleFormat,
+            ).toShimmer(context, isLoading: isLoading, width: 80, height: 20),
           ],
         ),
       ),

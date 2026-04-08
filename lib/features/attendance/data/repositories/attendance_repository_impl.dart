@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:fpdart/fpdart.dart';
 
 import '../../../../utils/utils_export.dart';
@@ -29,7 +30,7 @@ class AttendanceRepositoryImpl implements AttendanceRepository {
 
       if (cachedListData != null) {
         final toEntities = cachedListData.map((m) => m.toEntity()).toList();
-
+        debugPrint("monthlyAttendance using data from local");
         return right(toEntities);
       }
     }
@@ -49,6 +50,7 @@ class AttendanceRepositoryImpl implements AttendanceRepository {
         year: year,
         listAttendanceModel: rawModel,
       );
+      debugPrint("monthlyAttendance data saved to local");
 
       final convertToEntity = rawModel.map((m) => m.toEntity()).toList();
 
@@ -62,7 +64,10 @@ class AttendanceRepositoryImpl implements AttendanceRepository {
   }) async {
     if (!forceRefresh) {
       final cachedData = _localDataSource.getSavedTodayAttendance();
-      if (cachedData != null) return right(cachedData.toEntity());
+      if (cachedData != null) {
+        debugPrint("todayAttendance using data from local");
+        return right(cachedData.toEntity());
+      }
     }
 
     final response = await _remoteDataSource.fetchTodayAttendance();
@@ -73,6 +78,7 @@ class AttendanceRepositoryImpl implements AttendanceRepository {
       final entities = todayAttendanceResponse.attendanceModel?.toEntity();
 
       if (entities != null) {
+        debugPrint("todayAttendance data saved to local");
         await _localDataSource.saveTodayAttendance(entities.toModel());
       }
 

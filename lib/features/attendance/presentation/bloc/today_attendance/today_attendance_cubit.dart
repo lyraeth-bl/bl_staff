@@ -29,4 +29,7 @@ class TodayAttendanceCubit extends Cubit<TodayAttendanceState> {
   }
 
   Future<void> refresh() => load(forceRefresh: true);
+
+  AttendanceEntity? get todayAttendance =>
+      state.whenOrNull(success: (attendance) => attendance);
 }

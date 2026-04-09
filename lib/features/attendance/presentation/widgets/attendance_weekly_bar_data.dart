@@ -41,7 +41,7 @@ List<AttendanceBarData> parseWeeklyData(List<AttendanceEntity> attendances) {
 
     double hours = switch (found.status) {
       // Set jam kerja ke 0 jika tidak masuk.
-      AttendanceStatus.absen => 0,
+      AttendanceStatus.absen || AttendanceStatus.belumAbsen => 0,
       // Staff yang lupa checkin atau lupa checkout tetap di anggap masuk.
       // jadi kita set fix jam kerjanya ke 8 jam.
       AttendanceStatus.lupaCheckin || AttendanceStatus.lupaCheckout => 8.0,

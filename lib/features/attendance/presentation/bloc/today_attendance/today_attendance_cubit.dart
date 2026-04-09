@@ -21,11 +21,15 @@ class TodayAttendanceCubit extends Cubit<TodayAttendanceState> {
       forceRefresh: forceRefresh,
     );
 
-    result.match(
-      (failure) => emit(TodayAttendanceState.failure(failure)),
-      (attendance) =>
-          emit(TodayAttendanceState.success(attendance: attendance)),
-    );
+    result.match((failure) => emit(TodayAttendanceState.failure(failure)), (
+      attendance,
+    ) {
+      if (attendance == null) {
+        return emit(TodayAttendanceState.noAttendanceToday());
+      }
+
+      return emit(TodayAttendanceState.success(attendance: attendance));
+    });
   }
 
   Future<void> refresh() => load(forceRefresh: true);

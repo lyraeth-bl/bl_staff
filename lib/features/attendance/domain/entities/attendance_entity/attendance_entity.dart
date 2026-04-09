@@ -2,7 +2,14 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'attendance_entity.freezed.dart';
 
-enum AttendanceStatus { hadir, terlambat, absen, lupaCheckin, lupaCheckout }
+enum AttendanceStatus {
+  hadir,
+  terlambat,
+  absen,
+  lupaCheckin,
+  lupaCheckout,
+  belumAbsen,
+}
 
 @freezed
 abstract class AttendanceEntity with _$AttendanceEntity {

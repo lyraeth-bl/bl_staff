@@ -56,7 +56,11 @@ class _WeeklyActivityChartState extends State<WeeklyActivityChart> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              ContainerChips(text: "Weekly"),
+              ContainerChips(
+                text: "Weekly",
+                backgroundColor: Theme.of(context).colorScheme.surface,
+                foregroundColor: Theme.of(context).colorScheme.onSurface,
+              ),
             ],
           ),
           const SizedBox(height: 12),

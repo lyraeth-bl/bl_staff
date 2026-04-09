@@ -86,6 +86,10 @@ class _DashboardRefreshWrapperState extends State<_DashboardRefreshWrapper> {
           todayAttendanceCompleter.complete();
           todayAttendanceSubs.cancel();
         },
+        noAttendanceToday: () {
+          todayAttendanceCompleter.complete();
+          todayAttendanceSubs.cancel();
+        },
       );
     });
 
@@ -246,11 +250,11 @@ class _DashboardContent extends StatelessWidget {
                     initial: () => const SizedBox.shrink(),
                     loading: () => const TodayStatusCardShimmer(),
 
+                    noAttendanceToday: () =>
+                        TodayStatusCard(status: AttendanceStatus.belumAbsen),
+
                     success: (attendance) {
-                      final status = attendance?.status;
-
-                      if (status == null) return const SizedBox.shrink();
-
+                      final status = attendance!.status;
                       return TodayStatusCard(status: status);
                     },
 

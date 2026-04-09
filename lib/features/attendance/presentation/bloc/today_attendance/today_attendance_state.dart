@@ -10,5 +10,7 @@ abstract class TodayAttendanceState with _$TodayAttendanceState {
     required AttendanceEntity? attendance,
   }) = _Success;
 
+  const factory TodayAttendanceState.noAttendanceToday() = _NoAttendanceToday;
+
   const factory TodayAttendanceState.failure(Failure failure) = _Failure;
 }

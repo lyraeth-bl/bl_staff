@@ -4,9 +4,16 @@ import 'package:flutter/material.dart';
 
 import '../../../../utils/utils_export.dart';
 
+/// A widget that displays the current time and updates every second.
+///
+/// This clock is lifecycle-aware; it stops updating when the app is in the
+/// background to save resources and resumes when the app returns to the
+/// foreground.
 class RealTimeClock extends StatefulWidget {
+  /// Creates a [RealTimeClock].
   const RealTimeClock({super.key, this.style});
 
+  /// The text style to apply to the clock display.
   final TextStyle? style;
 
   @override

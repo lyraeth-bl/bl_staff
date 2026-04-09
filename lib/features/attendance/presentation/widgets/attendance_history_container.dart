@@ -4,9 +4,16 @@ import '../../../../utils/shared/extension/extension.dart';
 import '../../../../utils/shared/widgets/container_chips.dart';
 import '../../domain/entities/attendance_entity/attendance_entity.dart';
 
+/// A card-like widget that displays the details of an attendance record.
+///
+/// This container shows the day of the week, the date, clock-in/out times,
+/// the calculated work duration, and the attendance status as a chip.
+/// The background color adjusts based on the date (e.g., highlighting weekends).
 class AttendanceHistoryContainer extends StatelessWidget {
+  /// Creates an [AttendanceHistoryContainer].
   const AttendanceHistoryContainer({super.key, required this.attendance});
 
+  /// The attendance record to display.
   final AttendanceEntity attendance;
 
   @override

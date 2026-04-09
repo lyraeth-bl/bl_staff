@@ -13,7 +13,16 @@ import '../widgets/attendance_history_container.dart';
 import '../widgets/filter_sheet.dart';
 import '../widgets/real_time_clock.dart';
 
+/// A screen that displays the staff member's attendance history and current status.
+///
+/// This screen provides a calendar view to navigate through different months
+/// and a list view of attendance records. Users can filter the history by
+/// various time ranges and view details for specific days.
+///
+/// The screen uses [AttendanceBloc] to manage the history state and supports
+/// pull-to-refresh functionality.
 class AttendanceScreen extends StatelessWidget {
+  /// Creates an [AttendanceScreen].
   const AttendanceScreen({super.key});
 
   @override

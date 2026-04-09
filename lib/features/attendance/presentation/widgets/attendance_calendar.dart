@@ -6,10 +6,23 @@ import 'package:table_calendar/table_calendar.dart';
 import '../../domain/entities/attendance_entity/attendance_entity.dart';
 import '../bloc/attendance_bloc.dart';
 
+/// A calendar widget that displays attendance status for each day.
+///
+/// This widget uses [TableCalendar] to provide a monthly view of attendance.
+/// It marks each day with a color-coded dot representing the attendance
+/// status. When a month is changed, it triggers a fetch for that month's
+/// data via [AttendanceBloc].
+///
+/// See also:
+/// * [AttendanceStatus], for the meaning of different marker colors.
 class AttendanceCalendar extends StatefulWidget {
+  /// Creates an [AttendanceCalendar].
   const AttendanceCalendar({super.key, this.onDayTapped, this.onMonthChanged});
 
+  /// Called when a specific day on the calendar is tapped.
   final ValueChanged<AttendanceEntity?>? onDayTapped;
+
+  /// Called when the calendar page changes to a different month or year.
   final void Function(int month, int year)? onMonthChanged;
 
   @override

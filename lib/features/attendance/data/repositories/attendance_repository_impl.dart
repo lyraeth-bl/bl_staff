@@ -10,7 +10,17 @@ import '../mapper/attendance_mapper.dart';
 import '../models/monthly_attendance_response/monthly_attendance_response.dart';
 import '../models/today_attendance_response/today_attendance_response.dart';
 
+/// An implementation of [AttendanceRepository] that manages attendance data.
+///
+/// This implementation uses a repository pattern with a caching strategy.
+/// It coordinates data retrieval between [AttendanceRemoteDataSource] and
+/// [AttendanceLocalDataSource]. Records are cached locally to provide
+/// offline support and reduce network requests.
+///
+/// See also:
+/// * [AttendanceRepository], the interface this class implements.
 class AttendanceRepositoryImpl implements AttendanceRepository {
+  /// Creates an [AttendanceRepositoryImpl] with the given data sources.
   AttendanceRepositoryImpl(this._remoteDataSource, this._localDataSource);
 
   final AttendanceLocalDataSource _localDataSource;

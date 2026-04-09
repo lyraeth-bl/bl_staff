@@ -9,7 +9,17 @@ part 'attendance_bloc.freezed.dart';
 part 'attendance_event.dart';
 part 'attendance_state.dart';
 
+/// A BLoC that manages the state of the attendance history.
+///
+/// This BLoC handles fetching and refreshing attendance records for specific
+/// months and years. It coordinates with [FetchMonthlyAttendanceUseCase] to
+/// retrieve data and emits [AttendanceState] to represent the current UI state.
+///
+/// See also:
+/// * [AttendanceEvent], for the events handled by this BLoC.
+/// * [AttendanceState], for the states emitted by this BLoC.
 class AttendanceBloc extends Bloc<AttendanceEvent, AttendanceState> {
+  /// Creates an [AttendanceBloc] with the given use case.
   AttendanceBloc(this._fetchMonthlyAttendanceUseCase)
     : super(const AttendanceState.initial()) {
     on<_Started>(_onStarted);

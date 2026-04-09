@@ -4,9 +4,16 @@ import 'package:shimmer/shimmer.dart';
 
 import '../../domain/entities/attendance_entity/attendance_entity.dart';
 
+/// A card that displays the user's attendance status for today.
+///
+/// This widget uses different colors and icons based on the [status] to
+/// provide visual feedback on whether the user has clocked in, is late,
+/// or is absent.
 class TodayStatusCard extends StatelessWidget {
+  /// Creates a [TodayStatusCard].
   const TodayStatusCard({super.key, required this.status});
 
+  /// The attendance status for today.
   final AttendanceStatus status;
 
   @override

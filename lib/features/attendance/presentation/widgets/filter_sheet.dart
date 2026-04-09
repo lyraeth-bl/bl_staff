@@ -4,14 +4,22 @@ import '../../domain/entities/attendance_entity/attendance_entity.dart';
 import '../../domain/entities/attendance_filtering.dart';
 import 'attendance_history_container.dart';
 
+/// A bottom sheet for selecting attendance history filters.
+///
+/// This widget provides a list of [AttendanceFilter] options, allowing the
+/// user to refine the displayed attendance records.
 class FilterSheet extends StatelessWidget {
+  /// Creates a [FilterSheet].
   const FilterSheet({
     super.key,
     required this.activeFilter,
     required this.onFilterSelected,
   });
 
+  /// The currently active filter.
   final AttendanceFilter activeFilter;
+
+  /// Called when a new filter is selected.
   final ValueChanged<AttendanceFilter> onFilterSelected;
 
   @override

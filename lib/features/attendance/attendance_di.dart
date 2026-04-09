@@ -11,6 +11,10 @@ import 'domain/usecases/fetch_today_attendance_use_case.dart';
 import 'presentation/bloc/attendance_bloc.dart';
 import 'presentation/bloc/today_attendance/today_attendance_cubit.dart';
 
+/// Initializes the dependency injection for the attendance feature.
+///
+/// This function registers the repositories, data sources, use cases,
+/// and BLoCs required for attendance functionality into the service locator.
 void initAttendanceDI() {
   getIt.registerLazySingleton<AttendanceRepository>(
     () => AttendanceRepositoryImpl(

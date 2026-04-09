@@ -1,10 +1,9 @@
-import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+import '../../../../core/core.dart';
 import '../../../../utils/utils_export.dart';
 import '../../domain/entities/attendance_entity/attendance_entity.dart';
 import '../../domain/entities/attendance_filtering.dart';
@@ -31,44 +30,26 @@ class AttendanceScreen extends StatelessWidget {
   }
 }
 
-class _AttendanceRefreshWrapper extends StatefulWidget {
+class _AttendanceRefreshWrapper extends StatelessWidget {
   const _AttendanceRefreshWrapper({required this.child});
 
   final Widget child;
 
   @override
-  State<_AttendanceRefreshWrapper> createState() =>
-      _AttendanceRefreshWrapperState();
-}
-
-class _AttendanceRefreshWrapperState extends State<_AttendanceRefreshWrapper> {
-  Future<void> _onRefresh() async {
-    final monthlyAttendanceCompleter = Completer<void>();
-
-    context.read<AttendanceBloc>().add(AttendanceEvent.refreshed());
-
-    late StreamSubscription monthlyAttendanceSubs;
-    monthlyAttendanceSubs = context.read<AttendanceBloc>().stream.listen((
-      state,
-    ) {
-      state.whenOrNull(
-        failure: (failure) {
-          monthlyAttendanceCompleter.complete();
-          monthlyAttendanceSubs.cancel();
-        },
-        success: (_, _, _) {
-          monthlyAttendanceCompleter.complete();
-          monthlyAttendanceSubs.cancel();
-        },
-      );
-    });
-
-    return monthlyAttendanceCompleter.future;
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(onRefresh: _onRefresh, child: widget.child);
+    return RefreshWrapper(
+      onRefresh: () =>
+          blocRefresh<AttendanceBloc, AttendanceEvent, AttendanceState>(
+            context: context,
+            event: const AttendanceEvent.refreshed(),
+            isDone: (state) => state.maybeWhen(
+              success: (_, _, _) => true,
+              failure: (_) => true,
+              orElse: () => false,
+            ),
+          ),
+      child: child,
+    );
   }
 }
 

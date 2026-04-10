@@ -9,6 +9,7 @@ export 'app/initialize_app.dart';
 export 'app_router/app_router.dart';
 export 'app_router/go_router_refresh_stream.dart';
 export 'app_router/route_names.dart';
+export 'bloc/bloc_refresh_helper.dart';
 export 'di/setup_locator.dart';
 export 'storage/hive_storage/hive_storage_names.dart';
 export 'storage/prefs_storage/prefs_storage_names.dart';

@@ -4,9 +4,16 @@ import 'package:shimmer/shimmer.dart';
 
 import '../../domain/entities/attendance_entity/attendance_entity.dart';
 
+/// A card that displays the user's attendance status for today.
+///
+/// This widget uses different colors and icons based on the [status] to
+/// provide visual feedback on whether the user has clocked in, is late,
+/// or is absent.
 class TodayStatusCard extends StatelessWidget {
+  /// Creates a [TodayStatusCard].
   const TodayStatusCard({super.key, required this.status});
 
+  /// The attendance status for today.
   final AttendanceStatus status;
 
   @override
@@ -102,7 +109,7 @@ class TodayStatusCard extends StatelessWidget {
       case AttendanceStatus.lupaCheckin:
         return _StatusConfig(
           label: "Lupa Check in",
-          icon: LucideIcons.circleX,
+          icon: LucideIcons.circleQuestionMark,
           backgroundColor: Theme.of(context).colorScheme.errorContainer,
           borderColor: Theme.of(
             context,
@@ -117,7 +124,7 @@ class TodayStatusCard extends StatelessWidget {
       case AttendanceStatus.lupaCheckout:
         return _StatusConfig(
           label: "Lupa Check out",
-          icon: LucideIcons.circleX,
+          icon: LucideIcons.circleQuestionMark,
           backgroundColor: Theme.of(context).colorScheme.errorContainer,
           borderColor: Theme.of(
             context,
@@ -128,6 +135,19 @@ class TodayStatusCard extends StatelessWidget {
           iconColor: Theme.of(context).colorScheme.error,
           titleColor: Theme.of(context).colorScheme.error,
           subtitleColor: Theme.of(context).colorScheme.onErrorContainer,
+        );
+      case AttendanceStatus.belumAbsen:
+        return _StatusConfig(
+          label: "Belum absensi",
+          icon: LucideIcons.circleQuestionMark,
+          backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+          borderColor: Theme.of(context).colorScheme.outlineVariant,
+          iconBackgroundColor: Theme.of(
+            context,
+          ).colorScheme.surfaceContainerHigh,
+          iconColor: Theme.of(context).colorScheme.onSurfaceVariant,
+          titleColor: Theme.of(context).colorScheme.onSurface,
+          subtitleColor: Theme.of(context).colorScheme.onSurfaceVariant,
         );
     }
   }

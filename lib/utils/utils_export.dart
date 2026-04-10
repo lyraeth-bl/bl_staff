@@ -5,3 +5,4 @@ export 'shared/mappers/mappers.dart';
 export 'shared/models/sessions_token_model/sessions_token_model.dart';
 export 'shared/types/types.dart';
 export 'shared/widgets/container_chips.dart';
+export 'shared/widgets/refresh_wrapper.dart';

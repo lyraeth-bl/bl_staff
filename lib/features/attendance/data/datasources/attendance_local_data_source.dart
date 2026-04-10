@@ -4,16 +4,35 @@ import 'package:hive_flutter/hive_flutter.dart';
 import '../../../../core/core.dart';
 import '../models/attendance_model/attendance_model.dart';
 
+/// A data source for persisting and retrieving attendance data locally.
+///
+/// This interface defines methods for caching attendance records, allowing
+/// the application to function or show data when offline.
+///
+/// See also:
+/// * [AttendanceLocalDataSourceImpl], for the Hive-based implementation.
 abstract class AttendanceLocalDataSource {
+  /// Returns the cached attendance record for the current day.
+  ///
+  /// Returns null if no record is found for today.
   AttendanceModel? getSavedTodayAttendance();
 
+  /// Returns a list of cached attendance records for the specified [month] and [year].
+  ///
+  /// Returns null if no records are found for the given period.
   List<AttendanceModel>? getSavedMonthlyAttendance({
     required int month,
     required int year,
   });
 
+  /// Persists the [attendanceEntity] to local storage for the current day.
+  ///
+  /// Returns [unit] upon successful completion.
   Future<Unit> saveTodayAttendance(AttendanceModel attendanceEntity);
 
+  /// Persists a list of [listAttendanceModel] to local storage for the specified [month] and [year].
+  ///
+  /// Returns [unit] upon successful completion.
   Future<Unit> saveMonthlyAttendance({
     required int month,
     required int year,
@@ -21,7 +40,13 @@ abstract class AttendanceLocalDataSource {
   });
 }
 
+/// An implementation of [AttendanceLocalDataSource] that uses [HiveInterface]
+/// for local persistence.
+///
+/// This class handles key generation for daily and monthly records and
+/// manages serialization to and from the Hive box.
 class AttendanceLocalDataSourceImpl implements AttendanceLocalDataSource {
+  /// Creates an [AttendanceLocalDataSourceImpl] with the given [hive] instance.
   AttendanceLocalDataSourceImpl(this._hive);
 
   final HiveInterface _hive;

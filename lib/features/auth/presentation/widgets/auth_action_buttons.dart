@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
+/// A layout widget that displays primary and optional secondary action buttons.
+///
+/// This widget is typically used in authentication screens to provide a main
+/// call-to-action (like login) and an optional secondary action (like biometric
+/// authentication). It handles the layout and styling of these buttons.
 class AuthActionButtons extends StatelessWidget {
+  /// Creates an [AuthActionButtons] with the given actions and widgets.
   const AuthActionButtons({
     super.key,
     this.actionOnTap,
@@ -16,15 +22,34 @@ class AuthActionButtons extends StatelessWidget {
     this.buttonColor,
   });
 
+  /// The callback that is called when the primary action button is tapped.
   final void Function()? actionOnTap;
+
+  /// The callback that is called when the secondary action button is tapped.
   final void Function()? secondActionOnTap;
+
+  /// Whether to display the secondary action button.
   final bool? addSecondAction;
+
+  /// The border radius of the primary action button.
   final BorderRadiusGeometry? actionBorderRadius;
+
+  /// The border radius of the secondary action button.
   final BorderRadiusGeometry? secondActionBorderRadius;
+
+  /// The padding of the primary action button.
   final EdgeInsetsGeometry? actionPadding;
+
+  /// The padding of the secondary action button.
   final EdgeInsetsGeometry? secondActionPadding;
+
+  /// The widget to display inside the primary action button.
   final Widget actionWidget;
+
+  /// The widget to display inside the secondary action button.
   final Widget? secondActionWidget;
+
+  /// The background color of the primary action button.
   final Color? buttonColor;
 
   @override

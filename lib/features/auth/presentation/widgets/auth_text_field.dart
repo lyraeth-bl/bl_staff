@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 
+/// A custom text field component designed for the authentication flow.
+///
+/// This widget wraps a [TextFormField] and provides animated background color
+/// transitions based on its focus, error, or value state. It is primarily used
+/// to capture user input such as emails and passwords in the login screen.
 class AuthTextField extends StatefulWidget {
+  /// Creates an [AuthTextField] with the given configuration.
   const AuthTextField({
     super.key,
     required this.textEditingController,
@@ -11,11 +17,22 @@ class AuthTextField extends StatefulWidget {
     this.onChanged,
   });
 
+  /// The controller that manages the text being edited.
   final TextEditingController textEditingController;
+
+  /// Whether to hide the text being entered.
   final bool obscureText;
+
+  /// The padding around the input field's content.
   final EdgeInsetsGeometry? contentPadding;
+
+  /// The text displayed as a suggestion in the field.
   final String hintText;
+
+  /// The error message to display below the field.
   final String? errorText;
+
+  /// Called when the text in the field changes.
   final VoidCallback? onChanged;
 
   @override

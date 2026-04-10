@@ -6,10 +6,17 @@ import 'package:toastification/toastification.dart';
 import '../../../sessions/sessions.dart';
 import '../../domain/entities/login_params/login_params.dart';
 import '../bloc/auth_bloc.dart';
+import '../bloc/remember_me/remember_me_cubit.dart';
 import '../widgets/auth_action_buttons.dart';
 import '../widgets/auth_text_field.dart';
 
+/// The primary screen for user authentication.
+///
+/// This screen provides the interface for users to enter their credentials,
+/// manages login state transitions, and navigates to other parts of the app
+/// upon successful authentication.
 class AuthScreen extends StatelessWidget {
+  /// Creates an [AuthScreen].
   const AuthScreen({super.key});
 
   @override
@@ -41,9 +48,9 @@ class AuthScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 40),
-                _LoginForm(),
+                const _LoginForm(),
                 const SizedBox(height: 32),
-                _TroubleLogInText(),
+                const _TroubleLogInText(),
               ],
             ),
           ),
@@ -66,6 +73,23 @@ class _LoginFormState extends State<_LoginForm> {
 
   String? _emailError;
   String? _passwordError;
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await context.read<RememberMeCubit>().loadSavedEmail();
+      getSavedEmail();
+    });
+  }
+
+  void getSavedEmail() {
+    final savedEmail = context.read<RememberMeCubit>().state.savedEmail;
+    if (savedEmail.isNotEmpty) {
+      _emailController.text = savedEmail;
+    }
+  }
 
   @override
   void dispose() {
@@ -115,7 +139,14 @@ class _LoginFormState extends State<_LoginForm> {
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
-        state.whenOrNull(failure: (failure) => _handleFailure(failure));
+        state.whenOrNull(
+          successLogin: (_, _) {
+            context.read<RememberMeCubit>().onLoginSuccess(
+              _emailController.text.trim(),
+            );
+          },
+          failure: (failure) => _handleFailure(failure),
+        );
       },
       child: Column(
         children: [
@@ -124,7 +155,6 @@ class _LoginFormState extends State<_LoginForm> {
             hintText: "Email",
             errorText: _emailError,
             onChanged: () {
-              debugPrint('onChanged called, clearing emailError');
               setState(() => _emailError = null);
             },
           ),
@@ -135,12 +165,11 @@ class _LoginFormState extends State<_LoginForm> {
             obscureText: true,
             errorText: _passwordError,
             onChanged: () {
-              debugPrint('onChanged called, clearing passwordError');
               setState(() => _passwordError = null);
             },
           ),
           const SizedBox(height: 8),
-          _RememberMeRow(),
+          const _RememberMeRow(),
           const SizedBox(height: 40),
           BlocBuilder<AuthBloc, AuthState>(
             builder: (context, state) {
@@ -177,9 +206,9 @@ class _LoginFormState extends State<_LoginForm> {
 
                         FocusScope.of(context).unfocus();
 
-                  _loginStaff();
-                },
-              );
+                        _loginStaff();
+                      },
+                    );
             },
           ),
         ],
@@ -196,8 +225,6 @@ class _RememberMeRow extends StatefulWidget {
 }
 
 class _RememberMeRowState extends State<_RememberMeRow> {
-  bool _valueCheckBox = false;
-
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -205,16 +232,20 @@ class _RememberMeRowState extends State<_RememberMeRow> {
       children: [
         Row(
           children: [
-            Checkbox(
-              value: _valueCheckBox,
-              onChanged: (bool? value) {
-                setState(() {
-                  _valueCheckBox = value ?? false;
-                });
+            BlocBuilder<RememberMeCubit, RememberMeState>(
+              builder: (context, state) {
+                return Checkbox(
+                  value: state.isChecked,
+                  onChanged: (value) {
+                    context.read<RememberMeCubit>().toggleCheckBox(
+                      value ?? false,
+                    );
+                  },
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadiusGeometry.circular(16),
+                  ),
+                );
               },
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadiusGeometry.circular(16),
-              ),
             ),
             Text(
               "Remember me?",

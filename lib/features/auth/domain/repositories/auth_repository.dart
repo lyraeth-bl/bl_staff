@@ -26,4 +26,8 @@ abstract class AuthRepository {
   /// Clears the active session and invalidates any stored authentication tokens.
   /// Returns a [Result] indicating whether the logout operation succeeded.
   Future<Result<Unit>> logout();
+
+  Future<String?> getEmailFromRememberMe();
+
+  Future<Unit> saveEmailForRememberMe(String email);
 }

@@ -16,5 +16,6 @@ abstract final class ApiPath {
   // Attendance
   static const checkIn = "/attendance/check-in";
   static const checkOut = "/attendance/check-out";
+  static const todayAttendance = "/attendance/today";
   static const monthlyAttendance = "/attendance/monthly";
 }

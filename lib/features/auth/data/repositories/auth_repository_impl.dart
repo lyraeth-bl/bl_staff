@@ -5,19 +5,16 @@ import '../../../../utils/shared/mappers/mappers.dart';
 import '../../../../utils/shared/types/types.dart';
 import '../../domain/entities/login_params/login_params.dart';
 import '../../domain/repositories/auth_repository.dart';
+import '../datasources/auth_local_data_source.dart';
 import '../datasources/auth_remote_data_source.dart';
 import '../mappers/auth_mapper.dart';
 import '../models/login_response/login_response.dart';
 
-/// Implementation of [AuthRepository] that coordinates data from remote sources.
-///
-/// This class handles the mapping between domain entities and data models,
-/// and delegates network operations to the [AuthRemoteDataSource].
 class AuthRepositoryImpl implements AuthRepository {
-  /// Creates an [AuthRepositoryImpl] with the given [AuthRemoteDataSource].
-  AuthRepositoryImpl(this._remoteDataSource);
+  AuthRepositoryImpl(this._remoteDataSource, this._localDataSource);
 
   final AuthRemoteDataSource _remoteDataSource;
+  final AuthLocalDataSource _localDataSource;
 
   @override
   Future<Result<SessionsTokenEntity>> login(LoginParams loginParams) async {
@@ -36,4 +33,12 @@ class AuthRepositoryImpl implements AuthRepository {
 
     return response.match((failure) => left(failure), (u) => right(u));
   }
+
+  @override
+  Future<String?> getEmailFromRememberMe() async =>
+      await _localDataSource.getEmailFromRememberMe();
+
+  @override
+  Future<Unit> saveEmailForRememberMe(String email) async =>
+      await _localDataSource.saveEmailForRememberMe(email);
 }

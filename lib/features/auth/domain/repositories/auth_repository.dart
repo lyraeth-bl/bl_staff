@@ -27,7 +27,13 @@ abstract class AuthRepository {
   /// Returns a [Result] indicating whether the logout operation succeeded.
   Future<Result<Unit>> logout();
 
+  /// Returns the email address stored for the "remember me" feature.
+  ///
+  /// Returns null if no email is currently saved.
   Future<String?> getEmailFromRememberMe();
 
+  /// Persists the given [email] for the "remember me" feature.
+  ///
+  /// Returns [unit] upon successful completion.
   Future<Unit> saveEmailForRememberMe(String email);
 }

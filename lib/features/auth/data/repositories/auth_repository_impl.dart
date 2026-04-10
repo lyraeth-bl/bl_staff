@@ -10,7 +10,16 @@ import '../datasources/auth_remote_data_source.dart';
 import '../mappers/auth_mapper.dart';
 import '../models/login_response/login_response.dart';
 
+/// An implementation of [AuthRepository] that coordinates authentication tasks.
+///
+/// This class acts as a bridge between the domain layer and the data sources.
+/// It uses [AuthRemoteDataSource] for network-based authentication and
+/// [AuthLocalDataSource] for local credential persistence.
+///
+/// See also:
+/// * [AuthRepository], the domain interface this class implements.
 class AuthRepositoryImpl implements AuthRepository {
+  /// Creates an [AuthRepositoryImpl] with the given data sources.
   AuthRepositoryImpl(this._remoteDataSource, this._localDataSource);
 
   final AuthRemoteDataSource _remoteDataSource;

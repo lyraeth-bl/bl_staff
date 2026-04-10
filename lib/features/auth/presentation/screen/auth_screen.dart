@@ -10,7 +10,13 @@ import '../bloc/remember_me/remember_me_cubit.dart';
 import '../widgets/auth_action_buttons.dart';
 import '../widgets/auth_text_field.dart';
 
+/// The primary screen for user authentication.
+///
+/// This screen provides the interface for users to enter their credentials,
+/// manages login state transitions, and navigates to other parts of the app
+/// upon successful authentication.
 class AuthScreen extends StatelessWidget {
+  /// Creates an [AuthScreen].
   const AuthScreen({super.key});
 
   @override
@@ -42,9 +48,9 @@ class AuthScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 40),
-                _LoginForm(),
+                const _LoginForm(),
                 const SizedBox(height: 32),
-                _TroubleLogInText(),
+                const _TroubleLogInText(),
               ],
             ),
           ),
@@ -163,7 +169,7 @@ class _LoginFormState extends State<_LoginForm> {
             },
           ),
           const SizedBox(height: 8),
-          _RememberMeRow(),
+          const _RememberMeRow(),
           const SizedBox(height: 40),
           BlocBuilder<AuthBloc, AuthState>(
             builder: (context, state) {

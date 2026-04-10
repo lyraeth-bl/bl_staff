@@ -13,6 +13,10 @@ import 'domain/usecases/save_email_for_remember_me_use_case.dart';
 import 'presentation/bloc/auth_bloc.dart';
 import 'presentation/bloc/remember_me/remember_me_cubit.dart';
 
+/// Initializes the dependency injection for the authentication feature.
+///
+/// This function registers all the necessary repositories, data sources,
+/// use cases, and BLoCs with the [getIt] locator.
 void initAuthDI() {
   getIt.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(

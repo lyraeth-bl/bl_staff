@@ -7,16 +7,32 @@ import '../../../../utils/utils.dart';
 import '../models/login_request/login_request.dart';
 import '../models/login_response/login_response.dart';
 
+/// A data source that communicates with the remote authentication API.
+///
+/// This data source handles the network requests for user authentication
+/// and session management.
+///
+/// See also:
+/// * [LoginRequest], the data model for the login request.
+/// * [LoginResponse], the data model for the login response.
 abstract class AuthRemoteDataSource {
+  /// Sends a login request to the remote server.
+  ///
+  /// Returns a [Result] containing a [LoginResponse] if successful.
   Future<Result<LoginResponse>> login(LoginRequest loginRequest);
 
+  /// Sends a logout request to the remote server.
+  ///
+  /// Returns a [Result] indicating whether the operation succeeded.
   Future<Result<Unit>> logout();
 }
 
+/// Implementation of [AuthRemoteDataSource] using [ApiClient].
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
-  final ApiClient _apiClient;
-
+  /// Creates an [AuthRemoteDataSourceImpl] with the given [ApiClient].
   AuthRemoteDataSourceImpl(this._apiClient);
+
+  final ApiClient _apiClient;
 
   @override
   Future<Result<LoginResponse>> login(LoginRequest loginRequest) async {

@@ -155,8 +155,7 @@ Dispatch `started` once at the root to trigger session restoration:
 getIt<SessionsBloc>
 ().add
 (
-const
-SessionsEvent
+constSessionsEvent
 .
 started
 (

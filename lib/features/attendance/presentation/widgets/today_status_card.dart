@@ -1,3 +1,4 @@
+import 'package:bl_staff/utils/shared/extension/extension.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:shimmer/shimmer.dart';
@@ -19,42 +20,44 @@ class TodayStatusCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final config = _statusConfig(context);
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: config.backgroundColor,
+    return Card.outlined(
+      color: config.backgroundColor,
+      margin: EdgeInsets.zero,
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: config.borderColor),
+        side: BorderSide(color: config.borderColor),
       ),
-      child: Row(
-        children: [
-          CircleAvatar(
-            radius: 20,
-            backgroundColor: config.iconBackgroundColor,
-            foregroundColor: config.iconColor,
-            child: Icon(config.icon, size: 20),
-          ),
-          const SizedBox(width: 12),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Status hari ini",
-                style: Theme.of(
-                  context,
-                ).textTheme.bodySmall?.copyWith(color: config.subtitleColor),
-              ),
-              Text(
-                config.label,
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: config.titleColor,
-                  fontWeight: FontWeight.bold,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            CircleAvatar(
+              radius: 20,
+              backgroundColor: config.iconBackgroundColor,
+              foregroundColor: config.iconColor,
+              child: Icon(config.icon, size: 20),
+            ),
+            const SizedBox(width: 12),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Status hari ini",
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodySmall?.copyWith(color: config.subtitleColor),
                 ),
-              ),
-            ],
-          ),
-        ],
+                Text(
+                  config.label,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    color: config.titleColor,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -183,57 +186,54 @@ class TodayStatusCardShimmer extends StatelessWidget {
     final baseColor = Theme.of(context).colorScheme.surfaceContainerHighest;
     final highlightColor = Theme.of(context).colorScheme.surface;
 
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainer,
+    return Card.outlined(
+      color: Theme.of(context).colorScheme.surfaceContainer,
+      margin: EdgeInsets.zero,
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
+        side: BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
       ),
-      child: Row(
-        children: [
-          Shimmer.fromColors(
-            baseColor: baseColor,
-            highlightColor: highlightColor,
-            child: CircleAvatar(radius: 20, backgroundColor: Colors.white),
-          ),
-
-          const SizedBox(width: 12),
-
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Shimmer.fromColors(
-                baseColor: baseColor,
-                highlightColor: highlightColor,
-                child: Container(
-                  width: 100,
-                  height: 12,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            Shimmer.fromColors(
+              baseColor: baseColor,
+              highlightColor: highlightColor,
+              child: CircleAvatar(radius: 20, backgroundColor: Colors.white),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Shimmer.fromColors(
+                  baseColor: baseColor,
+                  highlightColor: highlightColor,
+                  child: Container(
+                    width: 100,
+                    height: 12,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                   ),
                 ),
-              ),
 
-              const SizedBox(height: 6),
-
-              Shimmer.fromColors(
-                baseColor: baseColor,
-                highlightColor: highlightColor,
-                child: Container(
-                  width: 120,
-                  height: 16,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
+                Shimmer.fromColors(
+                  baseColor: baseColor,
+                  highlightColor: highlightColor,
+                  child: Container(
+                    width: 120,
+                    height: 16,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ].separatedBy(6.h),
+            ),
+          ].separatedBy(12.w),
+        ),
       ),
     );
   }

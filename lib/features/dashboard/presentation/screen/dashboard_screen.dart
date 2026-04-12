@@ -1,5 +1,6 @@
 import 'package:bl_staff/utils/utils_export.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:toastification/toastification.dart';
@@ -90,8 +91,8 @@ class _DashboardAppBar extends StatelessWidget {
       floating: false,
       toolbarHeight: 80,
       backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
-      surfaceTintColor: Colors.transparent,
-      shadowColor: Colors.transparent,
+      surfaceTintColor: Theme.of(context).colorScheme.surfaceContainerHigh,
+      scrolledUnderElevation: 4.0,
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -101,9 +102,8 @@ class _DashboardAppBar extends StatelessWidget {
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
           ),
-          const SizedBox(height: 4),
           _UserNameOnAppBar(),
-        ],
+        ].separatedBy(4.h),
       ),
       actions: [
         CircleAvatar(
@@ -154,101 +154,130 @@ class _DashboardContent extends StatelessWidget {
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 24, left: 24),
-              child: Text(
-                "Dashboard",
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            const SizedBox(height: 24),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: BlocBuilder<TodayAttendanceCubit, TodayAttendanceState>(
-                builder: (context, state) {
-                  final todayAttendance = state.whenOrNull(
-                    success: (attendance) => attendance,
-                  );
-
-                  final isLoading = state.maybeWhen(
-                    loading: () => true,
-                    orElse: () => false,
-                  );
-
-                  return Row(
-                    children: [
-                      CheckinCheckoutContainer(
-                        title: "Check in",
-                        value: todayAttendance?.checkIn?.toHourMinuteFormat,
-                        icon: LucideIcons.squareArrowRight,
-                        isLoading: isLoading,
+          children:
+              [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 24, left: 24),
+                      child: Text(
+                        "Dashboard",
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurface,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                      const SizedBox(width: 8),
-                      CheckinCheckoutContainer(
-                        title: "Check out",
-                        value: todayAttendance?.checkOut?.toHourMinuteFormat,
-                        icon: LucideIcons.squareArrowLeft,
-                        isLoading: isLoading,
-                      ),
-                    ],
-                  );
-                },
-              ),
-            ),
-            const SizedBox(height: 8),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: BlocBuilder<TodayAttendanceCubit, TodayAttendanceState>(
-                builder: (context, state) {
-                  return state.when(
-                    initial: () => const SizedBox.shrink(),
-                    loading: () => const TodayStatusCardShimmer(),
+                    ),
 
-                    noAttendanceToday: () =>
-                        TodayStatusCard(status: AttendanceStatus.belumAbsen),
+                    24.h,
 
-                    success: (attendance) {
-                      final status = attendance!.status;
-                      return TodayStatusCard(status: status);
-                    },
+                    BlocBuilder<TodayAttendanceCubit, TodayAttendanceState>(
+                      builder: (context, state) {
+                        final todayAttendance = state.whenOrNull(
+                          success: (attendance) => attendance,
+                        );
 
-                    failure: (failure) {
-                      toastification.show(
-                        context: context,
-                        autoCloseDuration: const Duration(seconds: 3),
-                        type: ToastificationType.error,
-                        style: ToastificationStyle.flat,
-                        title: Text(failure.displayMessage),
-                        alignment: Alignment.bottomCenter,
-                      );
+                        final isLoading = state.maybeWhen(
+                  loading: () => true,
+                  orElse: () => false,
+                );
 
-                      return const SizedBox.shrink();
-                    },
-                  );
-                },
-              ),
-            ),
-            const SizedBox(height: 8),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: BlocBuilder<AttendanceBloc, AttendanceState>(
-                builder: (context, state) {
-                  final List<AttendanceEntity> attendanceData = state.maybeWhen(
-                    success: (attendances, _, _) => attendances,
-                    orElse: () => [],
-                  );
+                        return Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 24,
+                              ),
+                              child: Row(
+                                children: [
+                                  CheckinCheckoutContainer(
+                                    title: "Check in",
+                                    value: todayAttendance
+                                        ?.checkIn
+                                        ?.toHourMinuteFormat,
+                                    icon: LucideIcons.squareArrowRight,
+                                    isLoading: isLoading,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  CheckinCheckoutContainer(
+                                    title: "Check out",
+                                    value: todayAttendance
+                                        ?.checkOut
+                                        ?.toHourMinuteFormat,
+                                    icon: LucideIcons.squareArrowLeft,
+                                    isLoading: isLoading,
+                                  ),
+                                ],
+                              ),
+                            ),
 
-                  return WeeklyActivityChart(
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 24,
+                              ),
+                              child: state.when(
+                                initial: () => const SizedBox.shrink(),
+                                loading: () => const TodayStatusCardShimmer(),
+
+                                noAttendanceToday: () =>
+                            TodayStatusCard(
+                              status: AttendanceStatus.belumAbsen,
+                            ),
+
+                                success: (attendance) {
+                                  final status = attendance!.status;
+                                  return TodayStatusCard(status: status);
+                                },
+
+                                failure: (failure) {
+                          toastification.show(
+                            context: context,
+                            autoCloseDuration: const Duration(
+                              seconds: 3,
+                            ),
+                            type: ToastificationType.error,
+                            style: ToastificationStyle.flat,
+                            title: Text(failure.displayMessage),
+                            alignment: Alignment.bottomCenter,
+                          );
+
+                                  return const SizedBox.shrink();
+                                },
+                              ),
+                            ),
+                          ].separatedBy(8.h),
+                        );
+                      },
+                    ),
+
+                    8.h,
+
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: BlocBuilder<AttendanceBloc, AttendanceState>(
+                        builder: (context, state) {
+                          final List<AttendanceEntity> attendanceData = state
+                              .maybeWhen(
+                                success: (attendances, _, _) => attendances,
+                                orElse: () => [],
+                              );
+
+                          return WeeklyActivityChart(
                     weeklyData: parseWeeklyData(attendanceData),
                   );
                 },
               ),
             ),
-          ],
+          ]
+          // Jeda waktu setiap widget muncul
+              .animate(interval: 100.ms)
+          // Efek opacity
+              .fadeIn(duration: 400.ms, curve: Curves.easeOut)
+          // Efef geser dari bawah
+              .slideY(
+            begin: 0.1,
+            end: 0,
+            duration: 400.ms,
+            curve: Curves.easeOut,
+          ),
         ),
       ),
     );

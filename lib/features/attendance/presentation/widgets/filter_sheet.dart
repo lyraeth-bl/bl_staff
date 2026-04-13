@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../utils/shared/extension/extension.dart';
 import '../../domain/entities/attendance_entity/attendance_entity.dart';
 import '../../domain/entities/attendance_filtering.dart';
 import 'attendance_history_container.dart';
@@ -36,17 +37,6 @@ class FilterSheet extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Center(
-                child: Container(
-                  width: 40,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: colorScheme.outlineVariant,
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 8),
               Container(
                 padding: const EdgeInsets.only(left: 16, top: 24, right: 16),
                 decoration: BoxDecoration(
@@ -132,17 +122,6 @@ class DayDetailSheet extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Center(
-                child: Container(
-                  width: 40,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: colorScheme.outlineVariant,
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 24),
               if (attendance == null)
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 48),
@@ -157,7 +136,7 @@ class DayDetailSheet extends StatelessWidget {
                 )
               else
                 AttendanceHistoryContainer(attendance: attendance!),
-              const SizedBox(height: 24),
+              24.h,
             ],
           ),
         ),

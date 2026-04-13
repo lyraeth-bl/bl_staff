@@ -40,106 +40,108 @@ class AttendanceHistoryContainer extends StatelessWidget {
       durationStr = '${hours}j ${minutes}m';
     }
 
-    return Container(
-      margin: const EdgeInsets.only(top: 24),
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: containerColor,
-        borderRadius: BorderRadius.circular(24),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    dayStr,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 40,
-                      color: onContainerColor,
+    return Card.outlined(
+      margin: const EdgeInsets.only(top: 16),
+      color: containerColor,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      dayStr,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 40,
+                        color: onContainerColor,
+                      ),
                     ),
-                  ),
-                  Text(dateStr, style: TextStyle(color: onContainerColor)),
-                ],
-              ),
-              ContainerChips(
-                text: statusStr,
-                backgroundColor: chipColor,
-                foregroundColor: onChipColor,
-                enableBorder: false,
-                style: Theme.of(
-                  context,
-                ).textTheme.labelMedium?.copyWith(color: onChipColor),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 6,
+                    Text(dateStr, style: TextStyle(color: onContainerColor)),
+                  ],
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 48),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    checkInStr,
-                    style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                      color: onContainerColor,
-                      fontWeight: FontWeight.bold,
-                    ),
+                ContainerChips(
+                  text: statusStr,
+                  backgroundColor: chipColor,
+                  foregroundColor: onChipColor,
+                  enableBorder: false,
+                  style: Theme.of(
+                    context,
+                  ).textTheme.labelMedium?.copyWith(color: onChipColor),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    "Check in",
-                    style: Theme.of(
-                      context,
-                    ).textTheme.titleSmall?.copyWith(color: onContainerColor),
-                  ),
-                ],
-              ),
-              ContainerChips(
-                text: durationStr,
-                backgroundColor: chipColor,
-                foregroundColor: onChipColor,
-                enableBorder: false,
-                style: Theme.of(
-                  context,
-                ).textTheme.titleMedium?.copyWith(color: onChipColor),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 12,
                 ),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    checkOutStr,
-                    style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                      color: onContainerColor,
-                      fontWeight: FontWeight.bold,
+              ],
+            ),
+            const SizedBox(height: 48),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      checkInStr,
+                      style: Theme.of(context).textTheme.headlineLarge
+                          ?.copyWith(
+                            color: onContainerColor,
+                            fontWeight: FontWeight.bold,
+                          ),
                     ),
+                    const SizedBox(height: 4),
+                    Text(
+                      "Check in",
+                      style: Theme.of(
+                        context,
+                      ).textTheme.titleSmall?.copyWith(color: onContainerColor),
+                    ),
+                  ],
+                ),
+                ContainerChips(
+                  text: durationStr,
+                  backgroundColor: chipColor,
+                  foregroundColor: onChipColor,
+                  enableBorder: false,
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleMedium?.copyWith(color: onChipColor),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    "Check out",
-                    style: Theme.of(
-                      context,
-                    ).textTheme.titleSmall?.copyWith(color: onContainerColor),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      checkOutStr,
+                      style: Theme.of(context).textTheme.headlineLarge
+                          ?.copyWith(
+                            color: onContainerColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      "Check out",
+                      style: Theme.of(
+                        context,
+                      ).textTheme.titleSmall?.copyWith(color: onContainerColor),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

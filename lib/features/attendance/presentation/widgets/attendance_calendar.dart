@@ -31,14 +31,7 @@ class AttendanceCalendar extends StatefulWidget {
 
 class _AttendanceCalendarState extends State<AttendanceCalendar> {
   DateTime _focusedDay = DateTime.now();
-  DateTime? _selectedDay;
-
-  List<AttendanceEntity> _getEventsForDay(
-    DateTime day,
-    List<AttendanceEntity> attendances,
-  ) {
-    return attendances.where((a) => isSameDay(a.date, day)).toList();
-  }
+  late DateTime _selectedDay = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
@@ -47,9 +40,16 @@ class _AttendanceCalendarState extends State<AttendanceCalendar> {
     return BlocBuilder<AttendanceBloc, AttendanceState>(
       builder: (context, state) {
         final attendances = state.maybeWhen(
-          success: (attendances, _, __) => attendances,
+          success: (attendances, _, _) => attendances,
           orElse: () => <AttendanceEntity>[],
         );
+
+        final Map<DateTime, List<AttendanceEntity>> groupedAttendances = {};
+        for (var a in attendances) {
+          final dateKey = DateTime(a.date.year, a.date.month, a.date.day);
+          // Kalau belum ada, bikin list kosong [], lalu tambahin [a] ke dalamnya
+          groupedAttendances.putIfAbsent(dateKey, () => []).add(a);
+        }
 
         return TableCalendar<AttendanceEntity>(
           firstDay: DateTime.utc(2020, 1, 1),
@@ -58,7 +58,10 @@ class _AttendanceCalendarState extends State<AttendanceCalendar> {
           selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
           calendarFormat: CalendarFormat.month,
           startingDayOfWeek: StartingDayOfWeek.monday,
-          eventLoader: (day) => _getEventsForDay(day, attendances),
+          eventLoader: (day) {
+            final dateKey = DateTime(day.year, day.month, day.day);
+            return groupedAttendances[dateKey] ?? [];
+          },
           onDaySelected: (selectedDay, focusedDay) {
             setState(() {
               _selectedDay = selectedDay;
@@ -94,7 +97,9 @@ class _AttendanceCalendarState extends State<AttendanceCalendar> {
                   width: 6,
                   height: 6,
                   decoration: BoxDecoration(
-                    color: color,
+                    color: (isSameDay(day, _selectedDay))
+                        ? colorScheme.onPrimaryContainer
+                        : color,
                     shape: BoxShape.circle,
                   ),
                 ),
@@ -129,29 +134,25 @@ class _AttendanceCalendarState extends State<AttendanceCalendar> {
           ),
           calendarStyle: CalendarStyle(
             outsideDaysVisible: false,
-            defaultDecoration: const BoxDecoration(shape: BoxShape.rectangle),
-            weekendDecoration: const BoxDecoration(shape: BoxShape.rectangle),
-            holidayDecoration: const BoxDecoration(shape: BoxShape.rectangle),
-            outsideDecoration: const BoxDecoration(shape: BoxShape.rectangle),
-            disabledDecoration: const BoxDecoration(shape: BoxShape.rectangle),
+
             todayDecoration: BoxDecoration(
-              color: colorScheme.surfaceContainerLow,
-              borderRadius: BorderRadius.circular(8),
-              shape: BoxShape.rectangle,
+              color: colorScheme.surfaceContainerHigh,
+              shape: BoxShape.circle,
             ),
             todayTextStyle: TextStyle(
               color: colorScheme.onSurface,
               fontWeight: FontWeight.bold,
             ),
+
             selectedDecoration: BoxDecoration(
-              color: colorScheme.surfaceContainer,
-              borderRadius: BorderRadius.circular(8),
-              shape: BoxShape.rectangle,
+              color: colorScheme.primaryContainer,
+              shape: BoxShape.circle,
             ),
             selectedTextStyle: TextStyle(
-              color: colorScheme.onSurface,
+              color: colorScheme.onPrimaryContainer,
               fontWeight: FontWeight.bold,
             ),
+
             defaultTextStyle: TextStyle(color: colorScheme.onSurface),
             weekendTextStyle: TextStyle(color: colorScheme.error),
           ),

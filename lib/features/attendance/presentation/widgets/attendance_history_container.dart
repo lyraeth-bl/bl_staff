@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../../utils/shared/extension/extension.dart';
-import '../../../../utils/shared/widgets/container_chips.dart';
 import '../../domain/entities/attendance_entity/attendance_entity.dart';
 
 /// A card-like widget that displays the details of an attendance record.
@@ -26,8 +25,8 @@ class AttendanceHistoryContainer extends StatelessWidget {
     final chipColor = date.attendanceChipColor(colorScheme);
     final onChipColor = date.attendanceOnChipColor(colorScheme);
 
-    final checkInStr = attendance.checkIn?.toHourMinuteFormat ?? '--:--';
-    final checkOutStr = attendance.checkOut?.toHourMinuteFormat ?? '--:--';
+    final checkInStr = attendance.checkIn?.toHourMinuteFormat ?? '- - : - -';
+    final checkOutStr = attendance.checkOut?.toHourMinuteFormat ?? '- - : - -';
     final dayStr = date.toFullStringDay;
     final statusStr = attendance.status.label;
     final dateStr = attendance.date.toDayMonthYearFormat;
@@ -66,17 +65,18 @@ class AttendanceHistoryContainer extends StatelessWidget {
                     Text(dateStr, style: TextStyle(color: onContainerColor)),
                   ],
                 ),
-                ContainerChips(
-                  text: statusStr,
+                Chip(
+                  label: Text(
+                    statusStr,
+                    style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                      color: onChipColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                   backgroundColor: chipColor,
-                  foregroundColor: onChipColor,
-                  enableBorder: false,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.labelMedium?.copyWith(color: onChipColor),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 6,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    side: BorderSide.none,
                   ),
                 ),
               ],
@@ -105,17 +105,18 @@ class AttendanceHistoryContainer extends StatelessWidget {
                     ),
                   ],
                 ),
-                ContainerChips(
-                  text: durationStr,
+                Chip(
+                  label: Text(
+                    durationStr,
+                    style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                      color: onChipColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                   backgroundColor: chipColor,
-                  foregroundColor: onChipColor,
-                  enableBorder: false,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.titleMedium?.copyWith(color: onChipColor),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 12,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    side: BorderSide.none,
                   ),
                 ),
                 Column(

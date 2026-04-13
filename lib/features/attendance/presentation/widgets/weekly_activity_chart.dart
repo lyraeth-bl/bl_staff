@@ -2,7 +2,6 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../utils/utils_export.dart';
 import '../../domain/entities/attendance_entity/attendance_entity.dart';
 import '../bloc/attendance_bloc.dart';
 import 'attendance_weekly_bar_data.dart';
@@ -58,10 +57,21 @@ class _WeeklyActivityChartState extends State<WeeklyActivityChart> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                ContainerChips(
-                  text: "Weekly",
-                  backgroundColor: Theme.of(context).colorScheme.surface,
-                  foregroundColor: Theme.of(context).colorScheme.onSurface,
+                Chip(
+                  label: Text(
+                    "Weekly",
+                    style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.onInverseSurface,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    side: BorderSide(
+                      color: Theme.of(context).colorScheme.outlineVariant,
+                    ),
+                  ),
+                  backgroundColor: Theme.of(context).colorScheme.inverseSurface,
                 ),
               ],
             ),

@@ -1,3 +1,4 @@
+import 'package:bl_staff/features/features.dart';
 import 'package:bl_staff/utils/utils_export.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -5,8 +6,6 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:toastification/toastification.dart';
 
 import '../../../../core/bloc/bloc_refresh_helper.dart';
-import '../../../attendance/attendance.dart';
-import '../../../user/presentation/bloc/user_bloc.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -92,6 +91,14 @@ class _DashboardAppBar extends StatelessWidget {
       backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
       surfaceTintColor: Theme.of(context).colorScheme.surfaceContainerHigh,
       scrolledUnderElevation: 4.0,
+      leading: BlocSelector<UserBloc, UserState, String>(
+        selector: (state) =>
+            state.maybeWhen(success: (user) => user.name, orElse: () => '?'),
+        builder: (context, userName) => Padding(
+          padding: const EdgeInsets.only(left: 16),
+          child: ProfilePicture(reverseColor: true, userName: userName),
+        ),
+      ),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -105,30 +112,15 @@ class _DashboardAppBar extends StatelessWidget {
         ].separatedBy(4.h),
       ),
       actions: [
-        CircleAvatar(
-          radius: 18,
-          backgroundColor: Theme.of(
-            context,
-          ).colorScheme.surfaceContainerHighest,
-          foregroundColor: Theme.of(context).colorScheme.onSurfaceVariant,
-          child: Icon(LucideIcons.bell, size: 18),
-        ),
         Padding(
-          padding: const EdgeInsets.only(right: 16, left: 12),
+          padding: const EdgeInsets.only(right: 16),
           child: CircleAvatar(
             radius: 18,
             backgroundColor: Theme.of(
               context,
             ).colorScheme.surfaceContainerHighest,
             foregroundColor: Theme.of(context).colorScheme.onSurfaceVariant,
-            child: BlocSelector<UserBloc, UserState, String>(
-              selector: (state) => state.maybeWhen(
-                success: (user) =>
-                    user.name.isNotEmpty ? user.name[0].toUpperCase() : '?',
-                orElse: () => '?',
-              ),
-              builder: (context, initial) => Text(initial),
-            ),
+            child: Icon(LucideIcons.bell, size: 18),
           ),
         ),
       ],
@@ -178,6 +170,14 @@ class _DashboardContent extends StatelessWidget {
                   orElse: () => false,
                 );
 
+                final checkIn = (todayAttendance?.checkIn != null)
+                    ? todayAttendance?.checkIn?.toHourMinuteFormat
+                    : "- - : - -";
+
+                final checkOut = (todayAttendance?.checkOut != null)
+                    ? todayAttendance?.checkOut?.toHourMinuteFormat
+                    : "- - : - -";
+
                 return Column(
                   children: [
                     Padding(
@@ -186,19 +186,17 @@ class _DashboardContent extends StatelessWidget {
                         children: [
                           CheckinCheckoutContainer(
                             title: "Check in",
-                            value: todayAttendance?.checkIn?.toHourMinuteFormat,
+                            value: checkIn,
                             icon: LucideIcons.squareArrowRight,
                             isLoading: isLoading,
                           ),
-                          const SizedBox(width: 8),
                           CheckinCheckoutContainer(
                             title: "Check out",
-                            value:
-                                todayAttendance?.checkOut?.toHourMinuteFormat,
+                            value: checkOut,
                             icon: LucideIcons.squareArrowLeft,
                             isLoading: isLoading,
                           ),
-                        ],
+                        ].separatedBy(16.w),
                       ),
                     ),
 
@@ -231,12 +229,12 @@ class _DashboardContent extends StatelessWidget {
                         },
                       ),
                     ),
-                  ].separatedBy(8.h),
+                  ].separatedBy(16.h),
                 );
               },
             ),
 
-            8.h,
+            16.h,
 
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),

@@ -6,11 +6,16 @@ class ProfilePicture extends StatelessWidget {
     required this.userName,
     this.radius,
     this.inverseColor = false,
-  });
+    this.reverseColor = false,
+  }) : assert(
+         !(inverseColor && reverseColor),
+         'inverseColor dan reverseColor cannot both be true at the same time',
+       );
 
   final String userName;
   final double? radius;
   final bool inverseColor;
+  final bool reverseColor;
 
   @override
   Widget build(BuildContext context) {
@@ -18,10 +23,14 @@ class ProfilePicture extends StatelessWidget {
 
     final backgroundColor = inverseColor
         ? colorScheme.onInverseSurface
+        : reverseColor
+        ? colorScheme.inverseSurface
         : colorScheme.surfaceContainerHighest;
 
     final foregroundColor = inverseColor
         ? colorScheme.inverseSurface
+        : reverseColor
+        ? colorScheme.onInverseSurface
         : colorScheme.onSurfaceVariant;
 
     return CircleAvatar(

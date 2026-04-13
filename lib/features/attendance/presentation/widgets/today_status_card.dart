@@ -42,7 +42,7 @@ class TodayStatusCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Status hari ini",
+                  "Today status",
                   style: Theme.of(
                     context,
                   ).textTheme.bodySmall?.copyWith(color: config.subtitleColor),
@@ -66,7 +66,7 @@ class TodayStatusCard extends StatelessWidget {
     switch (status) {
       case AttendanceStatus.hadir:
         return _StatusConfig(
-          label: "Hadir",
+          label: "Present",
           icon: LucideIcons.circleCheck,
           backgroundColor: Theme.of(context).colorScheme.primaryContainer,
           borderColor: Theme.of(
@@ -81,7 +81,7 @@ class TodayStatusCard extends StatelessWidget {
         );
       case AttendanceStatus.terlambat:
         return _StatusConfig(
-          label: "Terlambat",
+          label: "Late",
           icon: LucideIcons.clock,
           backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
           borderColor: Theme.of(
@@ -96,7 +96,7 @@ class TodayStatusCard extends StatelessWidget {
         );
       case AttendanceStatus.absen:
         return _StatusConfig(
-          label: "Tidak Hadir",
+          label: "Absent",
           icon: LucideIcons.circleX,
           backgroundColor: Theme.of(context).colorScheme.errorContainer,
           borderColor: Theme.of(
@@ -111,7 +111,7 @@ class TodayStatusCard extends StatelessWidget {
         );
       case AttendanceStatus.lupaCheckin:
         return _StatusConfig(
-          label: "Lupa Check in",
+          label: "Forget to check in",
           icon: LucideIcons.circleQuestionMark,
           backgroundColor: Theme.of(context).colorScheme.errorContainer,
           borderColor: Theme.of(
@@ -126,7 +126,7 @@ class TodayStatusCard extends StatelessWidget {
         );
       case AttendanceStatus.lupaCheckout:
         return _StatusConfig(
-          label: "Lupa Check out",
+          label: "Forget to check out",
           icon: LucideIcons.circleQuestionMark,
           backgroundColor: Theme.of(context).colorScheme.errorContainer,
           borderColor: Theme.of(
@@ -141,7 +141,7 @@ class TodayStatusCard extends StatelessWidget {
         );
       case AttendanceStatus.belumAbsen:
         return _StatusConfig(
-          label: "Belum absensi",
+          label: "Not yet clock in",
           icon: LucideIcons.circleQuestionMark,
           backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
           borderColor: Theme.of(context).colorScheme.outlineVariant,

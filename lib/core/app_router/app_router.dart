@@ -128,20 +128,35 @@ class AppRouter {
         builder: (context, state) => const AuthScreen(),
       ),
 
-      ShellRoute(
-        builder: (context, state, child) => MainShell(child: child),
-        routes: [
-          GoRoute(
-            path: RouteNames.dashboard,
-            builder: (context, state) => const DashboardScreen(),
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) =>
+            MainShell(navigationShell: navigationShell),
+        branches: [
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: RouteNames.dashboard,
+                builder: (context, state) => const DashboardScreen(),
+              ),
+            ],
           ),
-          GoRoute(
-            path: RouteNames.attendance,
-            builder: (context, state) => const AttendanceScreen(),
+
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: RouteNames.attendance,
+                builder: (context, state) => const AttendanceScreen(),
+              ),
+            ],
           ),
-          GoRoute(
-            path: RouteNames.profile,
-            builder: (context, state) => const ProfileScreen(),
+
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: RouteNames.profile,
+                builder: (context, state) => const ProfileScreen(),
+              ),
+            ],
           ),
         ],
       ),

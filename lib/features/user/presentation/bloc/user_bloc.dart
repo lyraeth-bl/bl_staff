@@ -22,12 +22,18 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   }
 
   Future<void> _onFetchUser(_FetchUser event, Emitter<UserState> emit) async {
+    final lastUserData = state.whenOrNull(
+      success: (user) => user,
+      failure: (_, lastUserData) => lastUserData,
+    );
+
     emit(const UserState.loading());
 
     final result = await _fetchMeUseCase.call(forceRefresh: event.forceRefresh);
 
     result.match(
-      (failure) => emit(UserState.failure(failure)),
+      (failure) =>
+          emit(UserState.failure(failure: failure, lastUserData: lastUserData)),
       (user) => emit(UserState.success(user: user)),
     );
   }

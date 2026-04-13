@@ -43,6 +43,11 @@ class AttendanceBloc extends Bloc<AttendanceEvent, AttendanceState> {
     _currentMonth = event.month;
     _currentYear = event.year;
 
+    final lastAttendances = state.whenOrNull(
+      success: (attendances, _, _) => attendances,
+      failure: (_, lastAttendances, _, _) => lastAttendances,
+    );
+
     emit(const AttendanceState.loading());
 
     final result = await _fetchMonthlyAttendanceUseCase.call(
@@ -51,7 +56,14 @@ class AttendanceBloc extends Bloc<AttendanceEvent, AttendanceState> {
     );
 
     result.match(
-      (failure) => emit(AttendanceState.failure(failure)),
+      (failure) => emit(
+        AttendanceState.failure(
+          failure: failure,
+          lastAttendances: lastAttendances,
+          lastMonth: _currentMonth,
+          lastYear: _currentYear,
+        ),
+      ),
       (attendances) => emit(
         AttendanceState.success(
           attendances: attendances,
@@ -66,6 +78,10 @@ class AttendanceBloc extends Bloc<AttendanceEvent, AttendanceState> {
     _Refreshed event,
     Emitter<AttendanceState> emit,
   ) async {
+    final lastAttendances = state.whenOrNull(
+      success: (attendances, _, _) => attendances,
+      failure: (_, lastAttendances, _, _) => lastAttendances,
+    );
     emit(const AttendanceState.loading());
 
     final result = await _fetchMonthlyAttendanceUseCase.call(
@@ -75,7 +91,14 @@ class AttendanceBloc extends Bloc<AttendanceEvent, AttendanceState> {
     );
 
     result.match(
-      (failure) => emit(AttendanceState.failure(failure)),
+      (failure) => emit(
+        AttendanceState.failure(
+          failure: failure,
+          lastAttendances: lastAttendances,
+          lastMonth: _currentMonth,
+          lastYear: _currentYear,
+        ),
+      ),
       (attendances) => emit(
         AttendanceState.success(
           attendances: attendances,

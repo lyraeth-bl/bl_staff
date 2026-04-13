@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:toastification/toastification.dart';
 
 import '../../../../core/core.dart';
 import '../../../../utils/utils_export.dart';
@@ -54,7 +55,7 @@ class _AttendanceRefreshWrapper extends StatelessWidget {
             event: const AttendanceEvent.refreshed(),
             isDone: (state) => state.maybeWhen(
               success: (_, _, _) => true,
-              failure: (_) => true,
+              failure: (_, _, _, _) => true,
               orElse: () => false,
             ),
           ),
@@ -303,7 +304,21 @@ class _AttendanceHistoryList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AttendanceBloc, AttendanceState>(
+    return BlocConsumer<AttendanceBloc, AttendanceState>(
+      listener: (context, state) {
+        state.whenOrNull(
+          failure: (failure, _, _, _) {
+            toastification.show(
+              context: context,
+              autoCloseDuration: const Duration(seconds: 3),
+              type: ToastificationType.error,
+              style: ToastificationStyle.flat,
+              title: Text(failure.displayMessage),
+              alignment: Alignment.bottomCenter,
+            );
+          },
+        );
+      },
       builder: (context, state) {
         return state.when(
           initial: () => const SizedBox.shrink(),
@@ -311,18 +326,26 @@ class _AttendanceHistoryList extends StatelessWidget {
             padding: EdgeInsets.symmetric(vertical: 48),
             child: Center(child: CircularProgressIndicator()),
           ),
-          failure: (failure) => Padding(
-            padding: const EdgeInsets.symmetric(vertical: 48, horizontal: 16),
-            child: Center(
-              child: Text(
-                failure.displayMessage,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.error,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
+          failure: (failure, lastAttendanceData, _, _) {
+            final filtered = applyFilter(
+              lastAttendanceData ?? [],
+              activeFilter,
+            );
+
+            if (filtered.isEmpty) {
+              return const Padding(
+                padding: EdgeInsets.symmetric(vertical: 48),
+                child: Center(child: Text("No attendance today.")),
+              );
+            }
+
+            return Column(
+              children: filtered
+                  .map((a) => AttendanceHistoryContainer(attendance: a))
+                  .toList()
+                  .makeListAnimate(),
+            );
+          },
           success: (attendances, month, year) {
             final filtered = applyFilter(attendances, activeFilter);
 

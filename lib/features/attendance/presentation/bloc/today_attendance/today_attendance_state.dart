@@ -19,8 +19,10 @@ abstract class TodayAttendanceState with _$TodayAttendanceState {
   const factory TodayAttendanceState.noAttendanceToday() = _NoAttendanceToday;
 
   /// The state when an error occurred while fetching today's attendance.
-  const factory TodayAttendanceState.failure(
+  const factory TodayAttendanceState.failure({
     /// The failure details.
-    Failure failure,
-  ) = _Failure;
+    required Failure failure,
+
+    AttendanceEntity? dataBeforeFailure,
+  }) = _Failure;
 }

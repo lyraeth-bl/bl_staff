@@ -7,5 +7,6 @@ class FetchMeUseCase {
 
   final UserRepository _userRepository;
 
-  Future<Result<UserEntity>> call() async => await _userRepository.fetchMe();
+  Future<Result<UserEntity>> call({bool forceRefresh = false}) async =>
+      await _userRepository.fetchMe(forceRefresh: forceRefresh);
 }

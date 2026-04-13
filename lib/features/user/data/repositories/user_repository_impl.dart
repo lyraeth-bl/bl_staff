@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:fpdart/fpdart.dart';
 
 import '../../../../utils/utils_export.dart';
@@ -15,28 +16,24 @@ class UserRepositoryImpl implements UserRepository {
   final UserLocalDataSource _localDataSource;
 
   @override
-  Future<Result<UserEntity>> fetchMe() async {
+  Future<Result<UserEntity>> fetchMe({bool forceRefresh = false}) async {
+    if (!forceRefresh) {
+      final storedUserData = _localDataSource.getSavedUserDetail();
+
+      if (storedUserData != null) {
+        debugPrint("user data using data from local");
+        return right(storedUserData.toEntity());
+      }
+    }
+
     final response = await _remoteDataSource.fetchMe();
 
-    return response.match(
-      (failure) => left(failure),
-      (UserResponse userResponse) => right(userResponse.userModel.toEntity()),
-    );
-  }
-
-  @override
-  UserEntity? getSavedUserDetail() {
-    final model = _localDataSource.getSavedUserDetail();
-
-    if (model == null) return null;
-
-    return model.toEntity();
-  }
-
-  @override
-  Future<Unit> saveUserDetail(UserEntity userEntity) async {
-    await _localDataSource.saveUserDetail(userEntity.toModel());
-
-    return unit;
+    return response.match((failure) => left(failure), (
+      UserResponse userResponse,
+    ) async {
+      await _localDataSource.saveUserDetail(userResponse.userModel);
+      debugPrint("user data saved to local");
+      return right(userResponse.userModel.toEntity());
+    });
   }
 }

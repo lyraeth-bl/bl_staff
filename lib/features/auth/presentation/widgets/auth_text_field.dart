@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 /// A custom text field component designed for the authentication flow.
 ///
@@ -11,7 +12,7 @@ class AuthTextField extends StatefulWidget {
     super.key,
     required this.textEditingController,
     required this.hintText,
-    this.obscureText = false,
+    this.isPassword = false,
     this.contentPadding,
     this.errorText,
     this.onChanged,
@@ -21,7 +22,7 @@ class AuthTextField extends StatefulWidget {
   final TextEditingController textEditingController;
 
   /// Whether to hide the text being entered.
-  final bool obscureText;
+  final bool isPassword;
 
   /// The padding around the input field's content.
   final EdgeInsetsGeometry? contentPadding;
@@ -41,24 +42,21 @@ class AuthTextField extends StatefulWidget {
 
 class _AuthTextFieldState extends State<AuthTextField> {
   bool _hasValue = false;
+  late bool _obscureText;
 
   @override
   void initState() {
     super.initState();
+    _obscureText = widget.isPassword;
     widget.textEditingController.addListener(_onTextChanged);
   }
 
   void _onTextChanged() {
+    widget.onChanged?.call();
+
     final hasValue = widget.textEditingController.text.isNotEmpty;
     if (hasValue != _hasValue) {
-      setState(() {
-        _hasValue = hasValue;
-
-        debugPrint(
-          '_onTextChanged called, text: ${widget.textEditingController.text}',
-        );
-        widget.onChanged?.call();
-      });
+      setState(() => _hasValue = hasValue);
     }
   }
 
@@ -70,6 +68,8 @@ class _AuthTextFieldState extends State<AuthTextField> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     final hasError = widget.errorText != null;
 
     final color = hasError
@@ -83,17 +83,18 @@ class _AuthTextFieldState extends State<AuthTextField> {
       children: [
         AnimatedContainer(
           duration: const Duration(milliseconds: 200),
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
             color: color,
+            border: hasError ? Border.all(color: colorScheme.error) : null,
           ),
           child: TextFormField(
             controller: widget.textEditingController,
-            obscureText: widget.obscureText,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface,
-            ),
+            obscureText: _obscureText,
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: colorScheme.onSurface),
             decoration: InputDecoration(
               border: InputBorder.none,
               enabledBorder: InputBorder.none,
@@ -101,13 +102,19 @@ class _AuthTextFieldState extends State<AuthTextField> {
               errorBorder: InputBorder.none,
               focusedErrorBorder: InputBorder.none,
               contentPadding: widget.contentPadding ?? const EdgeInsets.all(16),
-              errorStyle: const TextStyle(color: Colors.red),
-              hint: Text(
-                widget.hintText,
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
-              ),
+              hintText: widget.hintText,
+              hintStyle: TextStyle(color: colorScheme.onSurfaceVariant),
+              suffixIcon: widget.isPassword
+                  ? IconButton(
+                      icon: Icon(
+                        _obscureText ? LucideIcons.eyeOff : LucideIcons.eye,
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                      onPressed: () {
+                        setState(() => _obscureText = !_obscureText);
+                      },
+                    )
+                  : null,
             ),
           ),
         ),
@@ -118,7 +125,8 @@ class _AuthTextFieldState extends State<AuthTextField> {
             child: Text(
               widget.errorText!,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Theme.of(context).colorScheme.error,
+                color: colorScheme.error,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),

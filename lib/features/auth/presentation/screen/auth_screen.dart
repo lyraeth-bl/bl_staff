@@ -162,7 +162,7 @@ class _LoginFormState extends State<_LoginForm> {
           AuthTextField(
             textEditingController: _passwordController,
             hintText: "Password",
-            obscureText: true,
+            isPassword: true,
             errorText: _passwordError,
             onChanged: () {
               setState(() => _passwordError = null);

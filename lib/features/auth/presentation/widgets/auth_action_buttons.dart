@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
+import '../../../../utils/shared/extension/extension.dart';
+
 /// A layout widget that displays primary and optional secondary action buttons.
 ///
 /// This widget is typically used in authentication screens to provide a main
@@ -54,46 +56,39 @@ class AuthActionButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Row(
       children: [
         Expanded(
-          child: GestureDetector(
-            onTap: () {
-              actionOnTap?.call();
-            },
-            child: Container(
+          child: FilledButton(
+            onPressed: actionOnTap,
+            style: FilledButton.styleFrom(
+              backgroundColor: buttonColor ?? colorScheme.primary,
               padding:
                   actionPadding ?? const EdgeInsets.symmetric(vertical: 16),
-              decoration: BoxDecoration(
+              shape: RoundedRectangleBorder(
                 borderRadius: actionBorderRadius ?? BorderRadius.circular(16),
-                color: buttonColor ?? Theme.of(context).colorScheme.primary,
               ),
-              child: Center(child: actionWidget),
             ),
+            child: actionWidget,
           ),
         ),
         if (addSecondAction != false) ...[
-          GestureDetector(
-            onTap: () {
-              secondActionOnTap?.call();
-            },
-            child: Container(
-              margin: const EdgeInsets.only(left: 8),
+          8.w,
+          FilledButton(
+            onPressed: secondActionOnTap,
+            style: FilledButton.styleFrom(
+              backgroundColor: colorScheme.primary,
               padding: secondActionPadding ?? const EdgeInsets.all(16),
-              decoration: BoxDecoration(
+              shape: RoundedRectangleBorder(
                 borderRadius:
                     secondActionBorderRadius ?? BorderRadius.circular(16),
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              child: Center(
-                child:
-                    secondActionWidget ??
-                    Icon(
-                      LucideIcons.fingerprint,
-                      color: Theme.of(context).colorScheme.onPrimary,
-                    ),
               ),
             ),
+            child:
+                secondActionWidget ??
+                Icon(LucideIcons.fingerprint, color: colorScheme.onPrimary),
           ),
         ],
       ],

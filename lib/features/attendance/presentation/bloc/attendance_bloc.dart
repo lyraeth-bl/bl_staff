@@ -44,8 +44,12 @@ class AttendanceBloc extends Bloc<AttendanceEvent, AttendanceState> {
     _currentYear = event.year;
 
     final lastAttendances = state.whenOrNull(
-      success: (attendances, _, _) => attendances,
-      failure: (_, lastAttendances, _, _) => lastAttendances,
+      success: (attendances, month, year) =>
+          (month == event.month && year == event.year) ? attendances : null,
+      failure: (_, lastAttendances, lastMonth, lastYear) =>
+          (lastMonth == event.month && lastYear == event.year)
+          ? lastAttendances
+          : null,
     );
 
     emit(const AttendanceState.loading());

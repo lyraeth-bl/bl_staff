@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:fpdart/fpdart.dart';
 
 import '../../../../utils/utils_export.dart';
@@ -19,7 +20,10 @@ class UserRepositoryImpl implements UserRepository {
     if (!forceRefresh) {
       final storedUserData = _localDataSource.getSavedUserDetail();
 
-      if (storedUserData != null) return right(storedUserData.toEntity());
+      if (storedUserData != null) {
+        debugPrint("user data using data from local");
+        return right(storedUserData.toEntity());
+      }
     }
 
     final response = await _remoteDataSource.fetchMe();
@@ -28,7 +32,7 @@ class UserRepositoryImpl implements UserRepository {
       UserResponse userResponse,
     ) async {
       await _localDataSource.saveUserDetail(userResponse.userModel);
-
+      debugPrint("user data saved to local");
       return right(userResponse.userModel.toEntity());
     });
   }

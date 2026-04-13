@@ -2,6 +2,7 @@ import 'package:bl_staff/features/features.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:toastification/toastification.dart';
 
 import '../../../../core/core.dart';
 import '../../../../utils/utils_export.dart';
@@ -44,7 +45,7 @@ class _ProfileRefreshWrapper extends StatelessWidget {
         event: const UserEvent.fetchUser(forceRefresh: true),
         isDone: (state) => state.maybeWhen(
           success: (_) => true,
-          failure: (_) => true,
+          failure: (_, _) => true,
           orElse: () => false,
         ),
       ),
@@ -126,11 +127,25 @@ class _UserDataContainer extends StatelessWidget {
         color: colorScheme.inverseSurface,
         borderRadius: BorderRadius.circular(20),
       ),
-      child: BlocBuilder<UserBloc, UserState>(
+      child: BlocConsumer<UserBloc, UserState>(
+        listener: (context, state) {
+          state.whenOrNull(
+            failure: (failure, _) {
+              toastification.show(
+                context: context,
+                autoCloseDuration: const Duration(seconds: 3),
+                type: ToastificationType.error,
+                style: ToastificationStyle.flat,
+                title: Text(failure.displayMessage),
+                alignment: Alignment.bottomCenter,
+              );
+            },
+          );
+        },
         builder: (context, state) {
-          final UserEntity user = state.maybeWhen(
+          final UserEntity? user = state.whenOrNull(
             success: (user) => user,
-            orElse: () => UserEntity(id: 0, name: '-', email: '-'),
+            failure: (_, lastUserData) => lastUserData,
           );
 
           final isLoading = state.maybeWhen(
@@ -143,11 +158,11 @@ class _UserDataContainer extends StatelessWidget {
             children: [
               ProfilePicture(
                 radius: 40,
-                userName: user.name,
+                userName: user?.name ?? "-",
                 inverseColor: true,
               ),
               Text(
-                user.name,
+                user?.name ?? "-",
                 style: textTheme.titleLarge?.copyWith(
                   color: colorScheme.onInverseSurface,
                   fontWeight: FontWeight.bold,
@@ -160,7 +175,7 @@ class _UserDataContainer extends StatelessWidget {
                 alignment: Alignment.center,
               ),
               Text(
-                user.email,
+                user?.email ?? "-",
                 style: textTheme.bodyLarge?.copyWith(
                   color: colorScheme.onInverseSurface,
                 ),

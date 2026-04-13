@@ -8,5 +8,8 @@ abstract class UserState with _$UserState {
 
   const factory UserState.success({required UserEntity user}) = _Success;
 
-  const factory UserState.failure(Failure failure) = _Failure;
+  const factory UserState.failure({
+    required Failure failure,
+    UserEntity? lastUserData,
+  }) = _Failure;
 }

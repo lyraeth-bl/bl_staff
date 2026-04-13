@@ -22,8 +22,10 @@ abstract class AttendanceState with _$AttendanceState {
   }) = _Success;
 
   /// The state when an error occurred while fetching data.
-  const factory AttendanceState.failure(
-    /// The failure details.
-    Failure failure,
-  ) = _Failure;
+  const factory AttendanceState.failure({
+    required Failure failure,
+    List<AttendanceEntity>? lastAttendances,
+    int? lastMonth,
+    int? lastYear,
+  }) = _Failure;
 }

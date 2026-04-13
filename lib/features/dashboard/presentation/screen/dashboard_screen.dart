@@ -50,7 +50,7 @@ class _DashboardRefreshWrapper extends StatelessWidget {
           event: const UserEvent.fetchUser(forceRefresh: true),
           isDone: (state) => state.maybeWhen(
             success: (_) => true,
-            failure: (_) => true,
+            failure: (_, _) => true,
             orElse: () => false,
           ),
         ),
@@ -60,7 +60,7 @@ class _DashboardRefreshWrapper extends StatelessWidget {
           isDone: (state) => state.maybeWhen(
             success: (_) => true,
             noAttendanceToday: () => true,
-            failure: (_) => true,
+            failure: (_, _) => true,
             orElse: () => false,
           ),
         ),
@@ -69,7 +69,7 @@ class _DashboardRefreshWrapper extends StatelessWidget {
           event: const AttendanceEvent.refreshed(),
           isDone: (state) => state.maybeWhen(
             success: (_, _, _) => true,
-            failure: (_) => true,
+            failure: (_, _, _, _) => true,
             orElse: () => false,
           ),
         ),
@@ -92,8 +92,11 @@ class _DashboardAppBar extends StatelessWidget {
       surfaceTintColor: Theme.of(context).colorScheme.surfaceContainerHigh,
       scrolledUnderElevation: 4.0,
       leading: BlocSelector<UserBloc, UserState, String>(
-        selector: (state) =>
-            state.maybeWhen(success: (user) => user.name, orElse: () => '?'),
+        selector: (state) => state.maybeWhen(
+          success: (user) => user.name,
+          failure: (_, lastUserData) => lastUserData?.name ?? "?",
+          orElse: () => '?',
+        ),
         builder: (context, userName) => Padding(
           padding: const EdgeInsets.only(left: 16),
           child: ProfilePicture(reverseColor: true, userName: userName),
@@ -159,10 +162,25 @@ class _DashboardContent extends StatelessWidget {
 
             24.h,
 
-            BlocBuilder<TodayAttendanceCubit, TodayAttendanceState>(
+            BlocConsumer<TodayAttendanceCubit, TodayAttendanceState>(
+              listener: (context, state) {
+                state.whenOrNull(
+                  failure: (failure, _) {
+                    toastification.show(
+                      context: context,
+                      autoCloseDuration: const Duration(seconds: 3),
+                      type: ToastificationType.error,
+                      style: ToastificationStyle.flat,
+                      title: Text(failure.displayMessage),
+                      alignment: Alignment.bottomCenter,
+                    );
+                  },
+                );
+              },
               builder: (context, state) {
                 final todayAttendance = state.whenOrNull(
                   success: (attendance) => attendance,
+                  failure: (_, dataBeforeFailure) => dataBeforeFailure,
                 );
 
                 final isLoading = state.maybeWhen(
@@ -215,17 +233,10 @@ class _DashboardContent extends StatelessWidget {
                           return TodayStatusCard(status: status);
                         },
 
-                        failure: (failure) {
-                          toastification.show(
-                            context: context,
-                            autoCloseDuration: const Duration(seconds: 3),
-                            type: ToastificationType.error,
-                            style: ToastificationStyle.flat,
-                            title: Text(failure.displayMessage),
-                            alignment: Alignment.bottomCenter,
-                          );
+                        failure: (failure, lastDataAttendance) {
+                          final lastStatus = lastDataAttendance!.status;
 
-                          return const SizedBox.shrink();
+                          return TodayStatusCard(status: lastStatus);
                         },
                       ),
                     ),
@@ -242,6 +253,8 @@ class _DashboardContent extends StatelessWidget {
                 builder: (context, state) {
                   final List<AttendanceEntity> attendanceData = state.maybeWhen(
                     success: (attendances, _, _) => attendances,
+                    failure: (_, lastAttendances, _, _) =>
+                        lastAttendances ?? [],
                     orElse: () => [],
                   );
 
@@ -272,6 +285,8 @@ class _UserNameOnAppBar extends StatelessWidget {
 
         final userName = state.maybeWhen(
           success: (user) => user.name.isNotEmpty ? user.name : '-',
+          failure: (_, lastUserData) =>
+              (lastUserData?.name != null) ? lastUserData!.name : '-',
           orElse: () => '-',
         );
 

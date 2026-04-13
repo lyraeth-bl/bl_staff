@@ -28,21 +28,31 @@ class TodayAttendanceCubit extends Cubit<TodayAttendanceState> {
   /// Setting [forceRefresh] to true triggers a fresh fetch from the remote
   /// source, bypassing local caches.
   Future<void> load({bool forceRefresh = false}) async {
+    final lastDataAttendance = state.whenOrNull(
+      success: (attendance) => attendance,
+      failure: (_, dataBeforeFailure) => dataBeforeFailure,
+    );
     emit(const TodayAttendanceState.loading());
 
     final result = await _fetchTodayAttendanceUseCase.call(
       forceRefresh: forceRefresh,
     );
 
-    result.match((failure) => emit(TodayAttendanceState.failure(failure)), (
-      attendance,
-    ) {
-      if (attendance == null) {
-        return emit(TodayAttendanceState.noAttendanceToday());
-      }
+    result.match(
+      (failure) => emit(
+        TodayAttendanceState.failure(
+          failure: failure,
+          dataBeforeFailure: lastDataAttendance,
+        ),
+      ),
+      (attendance) {
+        if (attendance == null) {
+          return emit(TodayAttendanceState.noAttendanceToday());
+        }
 
-      return emit(TodayAttendanceState.success(attendance: attendance));
-    });
+        return emit(TodayAttendanceState.success(attendance: attendance));
+      },
+    );
   }
 
   /// Manually refreshes today's attendance record from the remote source.

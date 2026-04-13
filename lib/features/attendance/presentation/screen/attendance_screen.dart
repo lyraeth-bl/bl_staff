@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../../../core/core.dart';
@@ -146,15 +147,18 @@ class _AttendanceContentState extends State<_AttendanceContent> {
   }
 
   void _showFilterSheet() {
-    Navigator.of(context).push(
-      CupertinoSheetRoute<AttendanceFilter>(
-        builder: (context) => FilterSheet(
-          activeFilter: _activeFilter,
-          onFilterSelected: (filter) {
-            setState(() => _activeFilter = filter);
-            Navigator.of(context).pop();
-          },
-        ),
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      showDragHandle: true,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      builder: (context) => FilterSheet(
+        activeFilter: _activeFilter,
+        onFilterSelected: (filter) {
+          setState(() => _activeFilter = filter);
+          Navigator.of(context).pop();
+        },
       ),
     );
   }
@@ -162,6 +166,7 @@ class _AttendanceContentState extends State<_AttendanceContent> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
     return SliverToBoxAdapter(
       child: Container(
@@ -238,35 +243,23 @@ class _AttendanceContentState extends State<_AttendanceContent> {
                                 fontWeight: FontWeight.bold,
                               ),
                         ),
-                        GestureDetector(
-                          onTap: _showFilterSheet,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 6,
-                            ),
-                            decoration: BoxDecoration(
-                              color: colorScheme.primaryContainer,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  Icons.tune_rounded,
-                                  size: 16,
-                                  color: colorScheme.onPrimaryContainer,
-                                ),
-                                const SizedBox(width: 6),
-                                Text(
-                                  _activeFilter.label,
-                                  style: Theme.of(context).textTheme.labelMedium
-                                      ?.copyWith(
-                                        color: colorScheme.onPrimaryContainer,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                ),
-                              ],
+                        ActionChip(
+                          onPressed: _showFilterSheet,
+                          backgroundColor: colorScheme.primaryContainer,
+                          side: BorderSide.none,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          avatar: Icon(
+                            LucideIcons.slidersHorizontal,
+                            size: 16,
+                            color: colorScheme.onPrimaryContainer,
+                          ),
+                          label: Text(
+                            _activeFilter.label,
+                            style: textTheme.labelMedium?.copyWith(
+                              color: colorScheme.onPrimaryContainer,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
@@ -343,7 +336,8 @@ class _AttendanceHistoryList extends StatelessWidget {
             return Column(
               children: filtered
                   .map((a) => AttendanceHistoryContainer(attendance: a))
-                  .toList(),
+                  .toList()
+                  .makeListAnimate(),
             );
           },
         );

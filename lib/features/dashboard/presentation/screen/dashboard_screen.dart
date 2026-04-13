@@ -1,6 +1,5 @@
 import 'package:bl_staff/utils/utils_export.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:toastification/toastification.dart';
@@ -154,130 +153,107 @@ class _DashboardContent extends StatelessWidget {
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children:
-              [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 24, left: 24),
-                      child: Text(
-                        "Dashboard",
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurface,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 24, left: 24),
+              child: Text(
+                "Dashboard",
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
 
-                    24.h,
+            24.h,
 
-                    BlocBuilder<TodayAttendanceCubit, TodayAttendanceState>(
-                      builder: (context, state) {
-                        final todayAttendance = state.whenOrNull(
-                          success: (attendance) => attendance,
-                        );
+            BlocBuilder<TodayAttendanceCubit, TodayAttendanceState>(
+              builder: (context, state) {
+                final todayAttendance = state.whenOrNull(
+                  success: (attendance) => attendance,
+                );
 
-                        final isLoading = state.maybeWhen(
+                final isLoading = state.maybeWhen(
                   loading: () => true,
                   orElse: () => false,
                 );
 
-                        return Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 24,
-                              ),
-                              child: Row(
-                                children: [
-                                  CheckinCheckoutContainer(
-                                    title: "Check in",
-                                    value: todayAttendance
-                                        ?.checkIn
-                                        ?.toHourMinuteFormat,
-                                    icon: LucideIcons.squareArrowRight,
-                                    isLoading: isLoading,
-                                  ),
-                                  const SizedBox(width: 8),
-                                  CheckinCheckoutContainer(
-                                    title: "Check out",
-                                    value: todayAttendance
-                                        ?.checkOut
-                                        ?.toHourMinuteFormat,
-                                    icon: LucideIcons.squareArrowLeft,
-                                    isLoading: isLoading,
-                                  ),
-                                ],
-                              ),
-                            ),
+                return Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: Row(
+                        children: [
+                          CheckinCheckoutContainer(
+                            title: "Check in",
+                            value: todayAttendance?.checkIn?.toHourMinuteFormat,
+                            icon: LucideIcons.squareArrowRight,
+                            isLoading: isLoading,
+                          ),
+                          const SizedBox(width: 8),
+                          CheckinCheckoutContainer(
+                            title: "Check out",
+                            value:
+                                todayAttendance?.checkOut?.toHourMinuteFormat,
+                            icon: LucideIcons.squareArrowLeft,
+                            isLoading: isLoading,
+                          ),
+                        ],
+                      ),
+                    ),
 
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 24,
-                              ),
-                              child: state.when(
-                                initial: () => const SizedBox.shrink(),
-                                loading: () => const TodayStatusCardShimmer(),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: state.when(
+                        initial: () => const SizedBox.shrink(),
+                        loading: () => const TodayStatusCardShimmer(),
 
-                                noAttendanceToday: () =>
-                            TodayStatusCard(
-                              status: AttendanceStatus.belumAbsen,
-                            ),
+                        noAttendanceToday: () => TodayStatusCard(
+                          status: AttendanceStatus.belumAbsen,
+                        ),
 
-                                success: (attendance) {
-                                  final status = attendance!.status;
-                                  return TodayStatusCard(status: status);
-                                },
+                        success: (attendance) {
+                          final status = attendance!.status;
+                          return TodayStatusCard(status: status);
+                        },
 
-                                failure: (failure) {
+                        failure: (failure) {
                           toastification.show(
                             context: context,
-                            autoCloseDuration: const Duration(
-                              seconds: 3,
-                            ),
+                            autoCloseDuration: const Duration(seconds: 3),
                             type: ToastificationType.error,
                             style: ToastificationStyle.flat,
                             title: Text(failure.displayMessage),
                             alignment: Alignment.bottomCenter,
                           );
 
-                                  return const SizedBox.shrink();
-                                },
-                              ),
-                            ),
-                          ].separatedBy(8.h),
-                        );
-                      },
+                          return const SizedBox.shrink();
+                        },
+                      ),
                     ),
+                  ].separatedBy(8.h),
+                );
+              },
+            ),
 
-                    8.h,
+            8.h,
 
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
-                      child: BlocBuilder<AttendanceBloc, AttendanceState>(
-                        builder: (context, state) {
-                          final List<AttendanceEntity> attendanceData = state
-                              .maybeWhen(
-                                success: (attendances, _, _) => attendances,
-                                orElse: () => [],
-                              );
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: BlocBuilder<AttendanceBloc, AttendanceState>(
+                builder: (context, state) {
+                  final List<AttendanceEntity> attendanceData = state.maybeWhen(
+                    success: (attendances, _, _) => attendances,
+                    orElse: () => [],
+                  );
 
-                          return WeeklyActivityChart(
+                  return WeeklyActivityChart(
                     weeklyData: parseWeeklyData(attendanceData),
                   );
                 },
               ),
             ),
-          ]
-          // Jeda waktu setiap widget muncul
-              .animate(interval: 100.ms)
-          // Efek opacity
-              .fadeIn(duration: 400.ms, curve: Curves.easeOut)
-          // Efef geser dari bawah
-              .slideY(
-            begin: 0.1,
-            end: 0,
-            duration: 400.ms,
-            curve: Curves.easeOut,
-          ),
+          ].makeListAnimate(),
         ),
       ),
     );

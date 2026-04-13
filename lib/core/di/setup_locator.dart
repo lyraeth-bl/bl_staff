@@ -16,7 +16,8 @@ import '../storage/storage_di.dart';
 
 String _resolveBaseUrl() {
   final base =
-      dotenv.env['BASE_URL'] ?? (throw Exception('BASE_URL not found'));
+      dotenv.env['BASE_URL_SERVER'] ??
+      (throw Exception('BASE_URL_SERVER not found'));
   return '${base.replaceAll(RegExp(r'/+$'), '')}/api/v1';
 }
 

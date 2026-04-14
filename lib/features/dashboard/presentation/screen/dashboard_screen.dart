@@ -68,8 +68,8 @@ class _DashboardRefreshWrapper extends StatelessWidget {
           context: context,
           event: const AttendanceEvent.refreshed(),
           isDone: (state) => state.maybeWhen(
-            success: (_, _, _) => true,
-            failure: (_, _, _, _) => true,
+            success: (_, _, _, _) => true,
+            failure: (_, _, _, _, _) => true,
             orElse: () => false,
           ),
         ),
@@ -118,12 +118,12 @@ class _DashboardAppBar extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(right: 16),
           child: CircleAvatar(
-            radius: 18,
+            radius: 20,
             backgroundColor: Theme.of(
               context,
             ).colorScheme.surfaceContainerHighest,
             foregroundColor: Theme.of(context).colorScheme.onSurfaceVariant,
-            child: Icon(LucideIcons.bell, size: 18),
+            child: Icon(LucideIcons.bell, size: 20),
           ),
         ),
       ],
@@ -139,6 +139,7 @@ class _DashboardContent extends StatelessWidget {
     return SliverFillRemaining(
       child: Container(
         margin: const EdgeInsets.only(top: 24),
+        padding: const EdgeInsets.symmetric(horizontal: 24),
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.only(
@@ -150,7 +151,7 @@ class _DashboardContent extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.only(top: 24, left: 24),
+              padding: const EdgeInsets.only(top: 24),
               child: Text(
                 "Dashboard",
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -198,47 +199,43 @@ class _DashboardContent extends StatelessWidget {
 
                 return Column(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
-                      child: Row(
-                        children: [
-                          CheckinCheckoutContainer(
-                            title: "Check in",
-                            value: checkIn,
-                            icon: LucideIcons.squareArrowRight,
-                            isLoading: isLoading,
-                          ),
-                          CheckinCheckoutContainer(
-                            title: "Check out",
-                            value: checkOut,
-                            icon: LucideIcons.squareArrowLeft,
-                            isLoading: isLoading,
-                          ),
-                        ].separatedBy(16.w),
-                      ),
+                    Row(
+                      children: [
+                        CheckinCheckoutContainer(
+                          title: "Check in",
+                          value: checkIn,
+                          icon: LucideIcons.squareArrowRight,
+                          isLoading: isLoading,
+                        ),
+                        CheckinCheckoutContainer(
+                          title: "Check out",
+                          value: checkOut,
+                          icon: LucideIcons.squareArrowLeft,
+                          isLoading: isLoading,
+                        ),
+                      ].separatedBy(16.w),
                     ),
 
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
-                      child: state.when(
-                        initial: () => const SizedBox.shrink(),
-                        loading: () => const TodayStatusCardShimmer(),
+                    state.when(
+                      initial: () => const SizedBox.shrink(),
+                      loading: () => const TodayStatusCardShimmer(),
 
-                        noAttendanceToday: () => TodayStatusCard(
-                          status: AttendanceStatus.belumAbsen,
-                        ),
+                      noAttendanceToday: () =>
+                          TodayStatusCard(status: AttendanceStatus.belumAbsen),
 
-                        success: (attendance) {
-                          final status = attendance!.status;
-                          return TodayStatusCard(status: status);
-                        },
+                      success: (attendance) {
+                        final status = attendance!.status;
+                        return TodayStatusCard(status: status);
+                      },
 
-                        failure: (failure, lastDataAttendance) {
-                          final lastStatus = lastDataAttendance!.status;
+                      failure: (failure, lastDataAttendance) {
+                        AttendanceStatus? lastStatus =
+                            lastDataAttendance?.status;
 
-                          return TodayStatusCard(status: lastStatus);
-                        },
-                      ),
+                        lastStatus ??= AttendanceStatus.belumAbsen;
+
+                        return TodayStatusCard(status: lastStatus);
+                      },
                     ),
                   ].separatedBy(16.h),
                 );
@@ -247,23 +244,24 @@ class _DashboardContent extends StatelessWidget {
 
             16.h,
 
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: BlocBuilder<AttendanceBloc, AttendanceState>(
-                builder: (context, state) {
-                  final List<AttendanceEntity> attendanceData = state.maybeWhen(
-                    success: (attendances, _, _) => attendances,
-                    failure: (_, lastAttendances, _, _) =>
-                        lastAttendances ?? [],
-                    orElse: () => [],
-                  );
+            BlocBuilder<AttendanceBloc, AttendanceState>(
+              builder: (context, state) {
+                final List<AttendanceEntity> attendanceData = state.maybeWhen(
+                  success: (attendances, _, _, _) => attendances,
+                  failure: (_, lastAttendances, _, _, _) =>
+                      lastAttendances ?? [],
+                  orElse: () => [],
+                );
 
-                  return WeeklyActivityChart(
-                    weeklyData: parseWeeklyData(attendanceData),
-                  );
-                },
-              ),
+                return WeeklyActivityChart(
+                  weeklyData: parseWeeklyData(attendanceData),
+                );
+              },
             ),
+
+            16.h,
+
+            AttendanceSummaryCard(isWidgetForDashboard: true),
           ].makeListAnimate(),
         ),
       ),

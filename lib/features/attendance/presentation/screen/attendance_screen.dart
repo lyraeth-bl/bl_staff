@@ -1,3 +1,4 @@
+import 'package:bl_staff/features/attendance/attendance.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,12 +8,6 @@ import 'package:toastification/toastification.dart';
 
 import '../../../../core/core.dart';
 import '../../../../utils/utils_export.dart';
-import '../../domain/entities/attendance_entity/attendance_entity.dart';
-import '../../domain/entities/attendance_filtering.dart';
-import '../bloc/attendance_bloc.dart';
-import '../widgets/attendance_calendar.dart';
-import '../widgets/attendance_history_container.dart';
-import '../widgets/filter_sheet.dart';
 import '../widgets/real_time_clock.dart';
 
 /// A screen that displays the staff member's attendance history and current status.
@@ -54,8 +49,8 @@ class _AttendanceRefreshWrapper extends StatelessWidget {
             context: context,
             event: const AttendanceEvent.refreshed(),
             isDone: (state) => state.maybeWhen(
-              success: (_, _, _) => true,
-              failure: (_, _, _, _) => true,
+              success: (_, _, _, _) => true,
+              failure: (_, _, _, _, _) => true,
               orElse: () => false,
             ),
           ),
@@ -210,6 +205,9 @@ class _AttendanceContentState extends State<_AttendanceContent> {
                 },
               ),
             ),
+
+            AttendanceSummaryCard(),
+
             Container(
               width: double.infinity,
               margin: const EdgeInsets.only(left: 8, top: 24, right: 8),
@@ -230,14 +228,14 @@ class _AttendanceContentState extends State<_AttendanceContent> {
                   Padding(
                     padding: const EdgeInsets.only(
                       left: 16,
-                      top: 24,
+                      top: 16,
                       right: 16,
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "Attendance history",
+                          "Attendance History",
                           style: Theme.of(context).textTheme.titleLarge
                               ?.copyWith(
                                 color: colorScheme.onSurface,
@@ -307,7 +305,7 @@ class _AttendanceHistoryList extends StatelessWidget {
     return BlocConsumer<AttendanceBloc, AttendanceState>(
       listener: (context, state) {
         state.whenOrNull(
-          failure: (failure, _, _, _) {
+          failure: (failure, _, _, _, _) {
             toastification.show(
               context: context,
               autoCloseDuration: const Duration(seconds: 3),
@@ -326,7 +324,7 @@ class _AttendanceHistoryList extends StatelessWidget {
             padding: EdgeInsets.symmetric(vertical: 48),
             child: Center(child: CircularProgressIndicator()),
           ),
-          failure: (failure, lastAttendanceData, _, _) {
+          failure: (failure, lastAttendanceData, _, _, _) {
             final filtered = applyFilter(
               lastAttendanceData ?? [],
               activeFilter,
@@ -346,7 +344,7 @@ class _AttendanceHistoryList extends StatelessWidget {
                   .makeListAnimate(),
             );
           },
-          success: (attendances, month, year) {
+          success: (attendances, _, _, _) {
             final filtered = applyFilter(attendances, activeFilter);
 
             if (filtered.isEmpty) {

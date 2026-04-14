@@ -40,7 +40,7 @@ class _AttendanceCalendarState extends State<AttendanceCalendar> {
     return BlocBuilder<AttendanceBloc, AttendanceState>(
       builder: (context, state) {
         final attendances = state.maybeWhen(
-          success: (attendances, _, _) => attendances,
+          success: (attendances, _, _, _) => attendances,
           orElse: () => <AttendanceEntity>[],
         );
 

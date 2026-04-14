@@ -3,6 +3,7 @@ export 'bloc/today_attendance/today_attendance_cubit.dart';
 export 'screen/attendance_screen.dart';
 export 'widgets/attendance_calendar.dart';
 export 'widgets/attendance_history_container.dart';
+export 'widgets/attendance_summary_card.dart';
 export 'widgets/attendance_weekly_bar_data.dart';
 export 'widgets/checkin_checkout_container.dart';
 export 'widgets/filter_sheet.dart';
